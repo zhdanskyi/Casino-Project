@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Casino Royale | Crypto Casino</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Fuente moderna para UI/UX -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
+</head>
+
+<button onclick="localStorage.clear(); location.reload();"
+    style="position: fixed; bottom: 10px; right: 10px; z-index: 9999; background: red; color: white; padding: 10px; border-radius: 5px; cursor: pointer;">💣
+    Reset DB</button>
+
+<body>
+
+    <!-- modal de verificacion de edad (Meme Hub) -->
+    <dialog id="age-gate-modal" class="modal hub-theme">
+        <div class="modal-content hub-content">
+            <div class="hub-logo">
+                <span class="hub-white">Mellstroy</span><span class="hub-orange">Casino</span>
+            </div>
+            <h2>Este es un Sitio Web de Juego para Adultos</h2>
+            <p>Este sitio web contiene juegos de azar y apuestas, estrictamente restringidos a mayores de 18 años, que
+                implican riesgos de pérdida económica. Al entrar, afirma que tiene por lo menos 18 años de edad y que da
+                su consentimiento.</p>
+            <div class="modal-actions hub-actions">
+                <button id="btn-accept-age" class="btn hub-btn">TENGO 18 AÑOS O MÁS - ENTRAR</button>
+                <button id="btn-reject-age" class="btn hub-btn">SOY MENOR DE 18 AÑOS - SALIR</button>
+            </div>
+        </div>
+    </dialog>
+
+    <!-- modal del wallet -->
+    <dialog id="wallet-modal" class="modal">
+        <div class="modal-content glass-effect">
+            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+                <img id="wallet-avatar" src="" alt="Avatar"
+                    style="width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--accent-primary);">
+                <div style="text-align: left;">
+                    <h3 id="wallet-name" class="neon-text" style="margin-bottom: 5px;">Usuario</h3>
+                    <p style="color: var(--text-secondary); font-size: 0.9em;">Miembro VIP</p>
+                </div>
+                <button id="btn-close-wallet" class="btn-icon" style="margin-left: auto; align-self: flex-start;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 6L6 18M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Tabs de navegacion -->
+            <div class="wallet-tabs">
+                <button class="wallet-tab active" data-tab="deposit">Depósito</button>
+                <button class="wallet-tab" data-tab="withdraw">Retiro</button>
+                <button class="wallet-tab" data-tab="history">Historial</button>
+            </div>
+
+            <div class="wallet-body">
+                <!-- Contenedor general de saldo, se mantiene comun en deposito y retiro -->
+                <div class="wallet-balance-box">
+                    <p>Saldo Actual</p>
+                    <div class="balance-display">
+                        <span id="wallet-balance">0.00</span> <span class="currency">€</span>
+                    </div>
+                </div>
+
+                <!-- Tab Deposito / Retiro (comparten estructura) -->
+                <div id="tab-transaction" class="tab-content active">
+                    <div class="transaction-form">
+                        <label id="transaction-label">Cantidad a ingresar</label>
+                        <div class="input-group">
+                            <input type="number" id="transaction-input" placeholder="0.00" min="0" step="10">
+                            <span class="currency-addon">€</span>
+                        </div>
+
+                        <div class="quick-amounts">
+                            <button class="btn-quick" data-val="10">+10</button>
+                            <button class="btn-quick" data-val="50">+50</button>
+                            <button class="btn-quick" data-val="100">+100</button>
+                            <button class="btn-quick" id="btn-max-amount">MAX</button>
+                        </div>
+
+                        <button id="btn-confirm-transaction" class="btn btn-primary btn-full">Confirmar
+                            Transacción</button>
+                        <p id="transaction-msg" class="transaction-msg"></p>
+                    </div>
+                </div>
+
+                <!-- Tab Historial -->
+                <div id="tab-history" class="tab-content" style="display: none;">
+                    <ul id="wallet-transactions" class="history-list">
+                        <!-- transacciones inyectadas por js -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </dialog>
+
+    <!-- modal del perfil de usuario (separado) -->
+    <dialog id="profile-modal" class="modal">
+        <div class="modal-content glass-effect">
+            <h2 style="margin-bottom: 20px;">Mi Perfil</h2>
+            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+                <img id="profile-modal-avatar" src="" alt="Avatar"
+                    style="width: 80px; height: 80px; border-radius: 50%; border: 2px solid var(--accent-primary);">
+                <div style="text-align: left;">
+                    <h3 id="profile-modal-name" class="neon-text" style="margin-bottom: 5px; font-size: 1.5rem;">Usuario
+                    </h3>
+                    <p style="color: var(--text-secondary); font-size: 0.9em;">usuario@mellstroy.com</p>
+                </div>
+            </div>
+            <div style="display: flex; justify-content: flex-end; gap: 10px;">
+                <button id="btn-close-profile" class="btn btn-secondary">Cerrar</button>
+                <button id="btn-logout" class="btn btn-primary"
+                    style="background: #ef4444; box-shadow: 0 0 15px rgba(239, 68, 68, 0.5);">Cerrar Sesión</button>
+            </div>
+        </div>
+    </dialog>
+
+    <!-- modal de login / selector de perfiles -->
+    <dialog id="login-modal" class="modal" style="margin: auto; border: none; background: transparent; padding: 0;">
+        <div class="modal-content glass-effect" style="width: 100vw; max-width: 500px; text-align: center;">
+            <div style="margin-bottom: 30px;">
+                <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="var(--accent-secondary)"
+                    stroke-width="2"
+                    style="background: rgba(139, 92, 246, 0.1); border-radius: 15px; padding: 10px; margin-bottom: 15px;">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+                </svg>
+                <h2 class="neon-text">Bienvenido a Mellstroy</h2>
+                <p style="color: var(--text-secondary); margin-top: 10px;">Selecciona tu perfil o crea uno nuevo</p>
+            </div>
+
+            <div id="profiles-list"
+                style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 30px;">
+                <!-- perfiles inyectados por js -->
+            </div>
+
+            <div
+                style="background: rgba(0,0,0,0.2); padding: 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);">
+                <h4 style="margin-bottom: 15px; color: var(--text-secondary);">Crear nuevo perfil</h4>
+                <div class="input-group" style="margin-bottom: 15px;">
+                    <input type="text" id="new-profile-name" placeholder="Tu nombre..."
+                        style="flex: 1; background: transparent; border: none; color: #fff; padding: 12px; outline: none;">
+                </div>
+                <button id="btn-create-profile" class="btn btn-primary" style="width: 100%;">Registrarse y
+                    Jugar</button>
+            </div>
+        </div>
+    </dialog>
+
+    <div class="app-layout">
+
+        <!-- Sidebar Colapsable por defecto -->
+        <aside class="sidebar collapsed" id="sidebar">
+            <div class="sidebar-header" style="justify-content: center; padding-top: 10px;">
+                <button id="btn-toggle-sidebar" class="btn-icon" aria-label="Colapsar menú">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 12h18M3 6h18M3 18h18" />
+                    </svg>
+                </button>
+            </div>
+
+            <div class="sidebar-vip">
+                <div class="vip-level">Nivel Bronce</div>
+                <div class="vip-progress-bar">
+                    <div class="vip-progress-fill" style="width: 45%;"></div>
+                </div>
+                <div class="vip-xp">Faltan 550 XP</div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="#" class="active"><span class="icon">🎰</span> <span class="nav-text">Slots</span></a>
+                    </li>
+                    <li><a href="#"><span class="icon">🔴</span> <span class="nav-text">Live Casino</span></a></li>
+                    <li><a href="#"><span class="icon">🚀</span> <span class="nav-text">Crash Originals</span></a></li>
+                    <li><a href="#"><span class="icon">🎁</span> <span class="nav-text">Rakeback / Bonos</span></a></li>
+                    <li><a href="#"><span class="icon">🤝</span> <span class="nav-text">Afiliados</span></a></li>
+                </ul>
+                <ul style="margin-top: 30px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 20px;">
+                    <li><a href="#"><span class="icon">🎧</span> <span class="nav-text">Soporte 24/7</span></a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Contenedor Principal -->
+        <div class="main-content">
+
+            <!-- Topbar Superior -->
+            <header class="topbar">
+                <!-- Logo movido aquí -->
+                <div class="logo" style="display: flex; align-items: center; gap: 10px; cursor: pointer;"
+                    onclick="returnToHome()">
+                    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--accent-secondary)"
+                        stroke-width="2" style="background: rgba(139, 92, 246, 0.1); border-radius: 8px; padding: 4px;">
+                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+                    </svg>
+                    <span style="font-weight: 900; font-size: 1.5rem; letter-spacing: 1px;">MELLSTROY</span>
+                </div>
+
+                <div class="user-controls">
+                    <!-- Boton Iniciar Sesion (Oculto si hay sesion) -->
+                    <button id="btn-open-login" class="btn btn-primary" style="display: none;">Iniciar Sesión /
+                        Registro</button>
+
+                    <!-- Controles de usuario logueado -->
+                    <div id="logged-in-controls" style="display: flex; gap: 20px; align-items: center; display: none;">
+                        <!-- Contenedor de Saldo Mockeado -->
+                        <div class="balance-container glass-effect" style="cursor: pointer;">
+                            <span id="user-balance" class="balance-amount">0.00</span>
+                            <span id="user-currency" class="balance-currency">€</span>
+                            <button id="btn-add-funds" class="btn-add">+</button>
+                        </div>
+
+                        <!-- Perfil de Usuario -->
+                        <div class="user-profile" id="user-profile-btn">
+                            <img id="user-avatar" src="" alt="Avatar" class="avatar">
+                            <span id="user-name" class="username">Usuario</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Área de Contenido Principal -->
+            <main>
+                <!-- Banners Promocionales -->
+                <section class="promo-banners">
+                    <div class="banner-card banner-1">
+                        <div class="banner-content">
+                            <h3>550% bonus +<br>400 free spins!</h3>
+                            <button class="btn btn-primary btn-sm">Grab</button>
+                        </div>
+                    </div>
+
+                    <div class="banner-card banner-2">
+                        <div class="banner-content">
+                            <h3>Up to 30%<br>casino cashback</h3>
+                            <button class="btn btn-secondary btn-sm"
+                                style="background: rgba(255,255,255,0.1); border: none;">Details</button>
+                        </div>
+                    </div>
+
+                    <div class="banner-card banner-3">
+                        <div class="banner-content">
+                            <h3>Multiple bet<br>bonus up to 15%</h3>
+                            <button class="btn btn-secondary btn-sm"
+                                style="background: rgba(255,255,255,0.1); border: none;">Details</button>
+                        </div>
+                    </div>
+
+                    <div class="banner-card banner-4">
+                        <div class="banner-content">
+                            <h3>Weekly Races<br>& Tournaments</h3>
+                            <button class="btn btn-secondary btn-sm"
+                                style="background: rgba(255,255,255,0.1); border: none;">Details</button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Buscador y Categorías -->
+                <section class="search-and-categories">
+                    <div class="search-bar-row">
+                        <div class="main-search">
+                            <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                            </svg>
+                            <input type="text" placeholder="Search" class="full-search-input">
+                        </div>
+                        <button class="btn btn-providers">Providers</button>
+                    </div>
+
+                    <div class="categories-scroll">
+                        <button class="category-btn active">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M4 4h6v6H4zm10 0h6v6h-6zM4 14h6v6H4zm10 0h6v6h-6z" />
+                            </svg>
+                            Lobby
+                        </button>
+                        <button class="category-btn">✨ Popular</button>
+                        <button class="category-btn">Mell Originals</button>
+                        <button class="category-btn">👑 Top games</button>
+                        <button class="category-btn">🎰 Slots</button>
+                        <button class="category-btn">🎯 Roulette</button>
+                        <button class="category-btn">🆕 New</button>
+                        <button class="category-btn">♠️ Live Casino</button>
+                        <button class="category-btn">🎁 Bonus buy</button>
+                        <button class="category-btn">⚡ Quick games</button>
+                        <button class="category-btn">🃏 Blackjack</button>
+                    </div>
+                </section>
+
+                <!-- Juego Crash (Oculto por defecto) -->
+                <section id="crash-game-section" style="display: none; margin-top: 20px;">
+                    <div class="crash-container">
+                        <!-- Izquierda: Gráfico -->
+                        <div class="crash-graph glass-effect">
+                            <div id="crash-multiplier" class="crash-multiplier-text">1.00x</div>
+                            <div id="crash-status-text" class="crash-status">Esperando...</div>
+                        </div>
+
+                        <!-- Derecha: Panel de Apuestas -->
+                        <div class="crash-panel glass-effect">
+                            <h3 style="margin-bottom: 20px;">Apuesta</h3>
+
+                            <div class="input-group" style="margin-bottom: 15px;">
+                                <input type="number" id="crash-bet-input" placeholder="0.00" min="0" value="10">
+                                <span class="currency-addon">€</span>
+                            </div>
+
+                            <div class="quick-amounts" style="margin-bottom: 20px;">
+                                <button class="btn-quick" id="btn-crash-min">Min</button>
+                                <button class="btn-quick" id="btn-crash-half">1/2</button>
+                                <button class="btn-quick" id="btn-crash-double">X2</button>
+                                <button class="btn-quick" id="btn-crash-max">Max</button>
+                            </div>
+
+                            <button id="btn-crash-action"
+                                class="btn btn-primary btn-full crash-action-btn">Apostar</button>
+                            <p id="crash-msg" class="transaction-msg"></p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Escaparate de Juegos (Grid) -->
+                <section class="game-showcase">
+                    <div class="section-header">
+                        <h2>Juegos Destacados</h2>
+                        <a href="#" class="link-view-all">Ver Todos</a>
+                    </div>
+
+                    <!-- El contenido se inyecta dinámicamente vía app.js para asegurar escalabilidad -->
+                    <div id="game-grid" class="game-grid">
+                        <!-- Las cards se renderizan aquí -->
+                    </div>
+                </section>
+            </main>
+
+        </div>
+    </div>
+
+    <!-- scripts -->
+    <script type="module" src="app.js"></script>
+</body>
+
+</html>
