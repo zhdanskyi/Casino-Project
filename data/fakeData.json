@@ -1,0 +1,10 @@
+{
+  "status": "success",
+  "games": [
+    { "id": "rocket", "name": "Rocket Crash" },
+    { "id": "aviator", "name": "Aviator Islands" },
+    { "id": "slots", "name": "Neon Slots" },
+    { "id": "poker", "name": "Cyber Poker" },
+    { "id": "mines", "name": "Neon Mines" }
+  ]
+}

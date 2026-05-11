@@ -1,0 +1,77 @@
+/* Responsive CSS */
+
+@media (max-width: 992px) {
+    .sidebar {
+        transform: translateX(-100%);
+        z-index: 1000;
+    }
+
+    .sidebar.open {
+        transform: translateX(0);
+    }
+
+    .topbar {
+        left: 0;
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .main-content {
+        margin-left: 0;
+    }
+
+    /* Add mobile menu toggle */
+    .mobile-menu-btn {
+        display: block;
+        font-size: 24px;
+        color: var(--text);
+        cursor: pointer;
+        background: none;
+        border: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .game-layout {
+        flex-direction: column;
+        height: auto;
+    }
+
+    .game-sidebar {
+        width: 100%;
+        order: 2;
+    }
+
+    .game-view {
+        min-height: 400px;
+        order: 1;
+    }
+
+    .profile-header {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .profile-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .hero-banner {
+        padding: 20px;
+    }
+
+    .hero-banner h1 {
+        font-size: 28px;
+    }
+
+    .user-profile-btn span {
+        display: none; /* Hide username on small screens to save space */
+    }
+}
+
+/* Hide mobile menu by default on large screens */
+@media (min-width: 993px) {
+    .mobile-menu-btn {
+        display: none;
+    }
+}

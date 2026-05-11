@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil | CasinoHub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/profile.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+    <link rel="stylesheet" href="../css/animations.css">
+    <style>
+        .bg-selector {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+            margin-top: 15px;
+            width: 250px;
+        }
+
+        .bg-thumb {
+            width: 100%;
+            aspect-ratio: 1;
+            border-radius: 12px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            cursor: pointer;
+            border: 2px solid rgba(255,255,255,0.1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .bg-thumb:hover {
+            transform: scale(1.1) translateY(-5px);
+            border-color: var(--cyan);
+            box-shadow: 0 10px 20px rgba(0, 255, 255, 0.2);
+            z-index: 2;
+        }
+
+        .bg-thumb.active {
+            border-color: var(--cyan);
+            box-shadow: 0 0 15px var(--cyan);
+        }
+
+        .bg-thumb.locked {
+            cursor: not-allowed;
+            filter: grayscale(1) brightness(0.5);
+        }
+
+        .lock-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            transition: opacity 0.3s;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01));
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            height: 4px;
+            background: transparent;
+        }
+
+        .stat-card.won::after { background: #10b981; }
+        .stat-card.lost::after { background: #ef4444; }
+        .stat-card.deposited::after { background: #94a3b8; }
+        .stat-card.played::after { background: var(--magenta); }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255,255,255,0.08);
+            border-color: rgba(255,255,255,0.2);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 800;
+            margin: 10px 0;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-logo">
+            <i class="fa-solid fa-dice-d20"></i> CasinoHub
+        </div>
+        <nav class="sidebar-nav">
+            <a href="../index.html" class="nav-item">
+                <i class="fa-solid fa-house"></i> Inicio
+            </a>
+            <a href="../index.html#games-section" class="nav-item">
+                <i class="fa-solid fa-gamepad"></i> Juegos
+            </a>
+            <a href="bonuses.html" class="nav-item">
+                <i class="fa-solid fa-gift"></i> Promociones
+            </a>
+            <a href="profile.html" class="nav-item active">
+                <i class="fa-solid fa-user"></i> Perfil
+            </a>
+        </nav>
+    </aside>
+
+    <header class="topbar">
+        <button id="mobileMenuBtn" class="mobile-menu-btn">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+        <div class="user-controls">
+            <div class="balance-display">
+                <i class="fa-solid fa-wallet"></i>
+                <span id="userBalance" class="balance-amount">0.00 EUR</span>
+            </div>
+            <button id="addFundsBtn" class="add-funds-btn">+ Añadir Saldo</button>
+            <a href="profile.html" class="user-profile-btn">
+                <div class="user-avatar" id="userAvatarBtn">J</div>
+                <span id="userNameBtn">Jugador</span>
+            </a>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="profile-container fade-in">
+            <div class="profile-header" style="position: relative; overflow: hidden; border-radius: 16px;">
+                <div id="profileBackground" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-card); z-index: 0; background-size: cover; background-position: center; transition: all 0.5s ease;"></div>
+                <div style="position: relative; z-index: 1; padding: 30px; display: flex; align-items: center; gap: 20px; background: rgba(7, 11, 20, 0.7); width: 100%; height: 100%;">
+                    <div class="profile-avatar" id="profileBigAvatar" style="cursor: pointer; position: relative;" title="Click para cambiar avatar">J</div>
+                    <div class="profile-info" style="flex: 1;">
+                        <h1 id="profileName" style="color: #fff; text-shadow: 0 0 10px rgba(0,255,255,0.5);">Jugador1</h1>
+                        <p style="color: #ccc;">Miembro desde 2026</p>
+                        <div class="level-bar-container" style="margin-top: 10px; background: rgba(255,255,255,0.1); height: 8px; border-radius: 4px; overflow: hidden;">
+                            <div id="profileLevelBar" class="level-bar" style="width: 0%; background: var(--cyan); height: 100%; box-shadow: 0 0 10px var(--cyan);"></div>
+                        </div>
+                        <p style="font-size: 12px; margin-top: 5px; color: #fff;">Nivel <span id="profileLevel">1</span> <span id="profileXpText">(0 / 100 EUR Ganados)</span></p>
+                    </div>
+                    
+                    <div class="background-gallery" style="display: flex; flex-direction: column; align-items: flex-end; gap: 10px;">
+                        <button id="btnViewBg" class="btn-primary" style="background: linear-gradient(45deg, #1e293b, #0f172a); border: 1px solid #334155; font-size: 12px; padding: 8px 12px;"><i class="fa-solid fa-eye"></i> Ver Fondo</button>
+                        <div style="display: flex; gap: 5px;" id="bgSelector">
+                            <!-- Background thumbnails generated by JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-stats">
+                <div class="stat-card won">
+                    <i class="fa-solid fa-arrow-trend-up" style="color: #10b981; font-size: 24px;"></i>
+                    <div class="stat-value" id="statWon" style="color: #10b981; text-shadow: 0 0 10px rgba(16,185,129,0.3);">0.00 EUR</div>
+                    <div class="stat-label">Total Ganado</div>
+                </div>
+
+                <div class="stat-card deposited">
+                    <i class="fa-solid fa-wallet" style="color: #94a3b8; font-size: 24px;"></i>
+                    <div class="stat-value" id="statDeposited" style="color: #94a3b8;">0.00 EUR</div>
+                    <div class="stat-label">Total Depositado</div>
+                </div>
+
+                <div class="stat-card lost">
+                    <i class="fa-solid fa-arrow-trend-down" style="color: #ef4444; font-size: 24px;"></i>
+                    <div class="stat-value" id="statLost" style="color: #ef4444; text-shadow: 0 0 10px rgba(239,68,68,0.3);">0.00 EUR</div>
+                    <div class="stat-label">Total Perdido</div>
+                </div>
+
+                <div class="stat-card played">
+                    <i class="fa-solid fa-gamepad" style="color: var(--magenta); font-size: 24px;"></i>
+                    <div class="stat-value" id="statGames" style="color: var(--magenta);">0</div>
+                    <div class="stat-label">Partidas Jugadas</div>
+                </div>
+            </div>
+            
+            <div class="history-panel">
+                <h3>Historial de Transacciones</h3>
+                <p style="color: var(--text-muted); font-size: 14px;">El historial detallado estará disponible próximamente.</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- modal del wallet -->
+    <dialog id="wallet-modal" class="modal">
+        <div class="modal-content glass-effect">
+            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+                <img id="wallet-avatar" src="" alt="Avatar" style="width: 60px; height: 60px; border-radius: 50%; border: 2px solid #0ea5e9;">
+                <div style="text-align: left;">
+                    <h3 id="wallet-name" class="neon-text" style="margin-bottom: 5px;">Usuario</h3>
+                    <p style="color: #94a3b8; font-size: 0.9em;">Miembro VIP</p>
+                </div>
+                <button id="btn-close-wallet" class="btn-icon" style="margin-left: auto; align-self: flex-start;">
+                    <i class="fa-solid fa-xmark" style="font-size: 24px;"></i>
+                </button>
+            </div>
+
+            <!-- Tabs de navegacion -->
+            <div class="wallet-tabs">
+                <button class="wallet-tab active" data-tab="deposit">Depósito</button>
+                <button class="wallet-tab" data-tab="withdraw">Retiro</button>
+                <button class="wallet-tab" data-tab="history">Historial</button>
+            </div>
+
+            <div class="wallet-body">
+                <!-- Contenedor general de saldo, se mantiene comun en deposito y retiro -->
+                <div class="wallet-balance-box">
+                    <p>Saldo Actual</p>
+                    <div class="balance-display">
+                        <span id="wallet-balance">0.00</span> <span class="currency">€</span>
+                    </div>
+                </div>
+
+                <!-- Tab Deposito / Retiro (comparten estructura) -->
+                <div id="tab-transaction" class="tab-content active">
+                    <div class="transaction-form">
+                        <label id="transaction-label">Cantidad a ingresar</label>
+                        <div class="input-group">
+                            <input type="number" id="transaction-input" placeholder="0.00" min="0" step="10">
+                            <span class="currency-addon">€</span>
+                        </div>
+
+                        <div class="quick-amounts">
+                            <button class="btn-quick" data-val="10">+10</button>
+                            <button class="btn-quick" data-val="50">+50</button>
+                            <button class="btn-quick" data-val="100">+100</button>
+                            <button class="btn-quick" id="btn-max-amount">MAX</button>
+                        </div>
+
+                        <button id="btn-confirm-transaction" class="btn-primary btn-full" style="border: none; cursor: pointer;">Confirmar Transacción</button>
+                        <p id="transaction-msg" class="transaction-msg"></p>
+                    </div>
+                </div>
+
+                <!-- Tab Historial -->
+                <div id="tab-history" class="tab-content" style="display: none;">
+                    <ul id="wallet-transactions" class="history-list">
+                        <!-- transacciones inyectadas por js -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </dialog>
+
+    <!-- modal de login / selector de perfiles -->
+    <dialog id="login-modal" class="modal">
+        <div class="modal-content glass-effect" style="margin: auto;">
+            <div style="margin-bottom: 30px;">
+                <i class="fa-solid fa-user-circle" style="font-size: 40px; color: var(--magenta); margin-bottom: 15px;"></i>
+                <h2 class="neon-text">Bienvenido a CasinoHub</h2>
+                <p style="color: #94a3b8; margin-top: 10px;">Selecciona tu perfil o crea uno nuevo</p>
+            </div>
+
+            <div id="profiles-list" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 30px;">
+                <!-- perfiles inyectados por js -->
+            </div>
+
+            <div style="background: rgba(0,0,0,0.2); padding: 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);">
+                <h4 style="margin-bottom: 15px; color: #94a3b8;">Crear nuevo perfil</h4>
+                <div class="input-group" style="margin-bottom: 15px;">
+                    <input type="text" id="new-profile-name" placeholder="Tu nombre..." style="flex: 1; background: transparent; border: none; color: #fff; padding: 12px; outline: none;">
+                </div>
+                <button id="btn-create-profile" class="btn-primary" style="width: 100%; border: none; cursor: pointer;">Registrarse y Jugar</button>
+            </div>
+            <button id="btn-close-login" class="btn-secondary" style="margin-top: 15px; width: 100%; cursor: pointer;">Cerrar</button>
+        </div>
+    </dialog>
+
+    <!-- Full Screen BG Modal -->
+    <dialog id="full-bg-modal" class="modal" style="background: transparent; padding: 0;">
+        <div class="modal-content" style="background: linear-gradient(to bottom, #1e293b, #0f172a); border: 4px solid var(--cyan); padding: 20px; border-radius: 16px; max-width: 90vw; cursor: pointer; position: relative; box-shadow: 0 0 40px rgba(0, 255, 255, 0.3), inset 0 0 20px rgba(0, 0, 0, 0.8);">
+            <div style="position: absolute; top: -4px; left: 20px; right: 20px; height: 8px; background: var(--cyan); border-radius: 0 0 10px 10px; box-shadow: 0 5px 15px rgba(0,255,255,0.5);"></div>
+            <div style="position: absolute; bottom: -4px; left: 20px; right: 20px; height: 8px; background: var(--cyan); border-radius: 10px 10px 0 0; box-shadow: 0 -5px 15px rgba(0,255,255,0.5);"></div>
+            <img id="full-bg-img" src="" style="width: 100%; height: 80vh; object-fit: contain; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: #000;">
+        </div>
+    </dialog>
+
+    <div id="toast-container"></div>
+
+    <script src="../js/utils/formatter.js"></script>
+    <script src="../js/storage.js"></script>
+    <script src="../js/notifications.js"></script>
+    <script src="../js/ui.js"></script>
+    <script src="../js/profile.js"></script>
+</body>
+</html>
