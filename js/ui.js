@@ -1,6 +1,6 @@
 // Gestor de UI
 const UI = {
-    init: function() {
+    init: function () {
         this.updateBalanceDisplay();
         this.updateProfileDisplay();
         this.setupEventListeners();
@@ -9,7 +9,7 @@ const UI = {
         this.applyGlobalBackground();
     },
 
-    applyGlobalBackground: function() {
+    applyGlobalBackground: function () {
         const user = Storage.getUser();
         if (user && user.bgImage) {
             let bgUrl = user.bgImage;
@@ -28,7 +28,7 @@ const UI = {
         }
     },
 
-    updateBalanceDisplay: function() {
+    updateBalanceDisplay: function () {
         const user = Storage.getUser();
         const balanceElements = document.querySelectorAll('#userBalance');
         balanceElements.forEach(el => {
@@ -40,15 +40,15 @@ const UI = {
         });
     },
 
-    updateProfileDisplay: function() {
+    updateProfileDisplay: function () {
         const user = Storage.getUser();
         const nameElements = document.querySelectorAll('#userNameBtn');
         const avatarElements = document.querySelectorAll('#userAvatarBtn');
-        
+
         if (user) {
             nameElements.forEach(el => { el.textContent = user.username; });
-            avatarElements.forEach(el => { 
-                el.innerHTML = `<img src="${user.avatar}" style="width:100%; height:100%; border-radius:50%; object-fit: cover;">`; 
+            avatarElements.forEach(el => {
+                el.innerHTML = `<img src="${user.avatar}" style="width:100%; height:100%; border-radius:50%; object-fit: cover;">`;
             });
         } else {
             nameElements.forEach(el => { el.textContent = "Iniciar Sesión"; });
@@ -56,7 +56,7 @@ const UI = {
         }
     },
 
-    setupEventListeners: function() {
+    setupEventListeners: function () {
         // Escuchar cambios de saldo
         window.addEventListener('userBalanceChanged', () => {
             this.updateBalanceDisplay();
@@ -67,18 +67,18 @@ const UI = {
 
 
 
-    renderProfilesList: function() {
+    renderProfilesList: function () {
         const list = document.getElementById('profiles-list');
         if (!list) return;
-        
+
         const users = Storage.getAllUsers();
         list.innerHTML = '';
-        
+
         if (users.length === 0) {
             list.innerHTML = '<p style="grid-column: span 2; color: #94a3b8;">No hay perfiles creados todavía.</p>';
             return;
         }
-        
+
         users.forEach(u => {
             list.innerHTML += `
                 <div class="profile-card" data-username="${u.username}" style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); transition: all 0.2s;">
@@ -90,18 +90,18 @@ const UI = {
         });
     },
 
-    openWalletModal: function() {
+    openWalletModal: function () {
         this.updateWalletModalUI();
         const walletModal = document.getElementById('wallet-modal');
         if (walletModal) walletModal.showModal();
     },
 
-    openVIPModal: function() {
+    openVIPModal: function () {
         const modal = document.getElementById('vip-modal');
         if (modal) modal.showModal();
     },
 
-    initVIPLogic: function() {
+    initVIPLogic: function () {
         const btnBuy = document.getElementById('btn-buy-vip');
         const btnClose = document.getElementById('btn-close-vip');
         const modal = document.getElementById('vip-modal');
@@ -115,7 +115,7 @@ const UI = {
                 const originalText = btnBuy.textContent;
                 btnBuy.textContent = "Procesando...";
                 btnBuy.disabled = true;
-                
+
                 setTimeout(() => {
                     const success = typeof purchaseVIP === 'function' ? purchaseVIP() : false;
                     if (success) {
@@ -132,14 +132,12 @@ const UI = {
         }
     },
 
-    initWalletLogic: function() {
+    initWalletLogic: function () {
         const btnCloseWallet = document.getElementById('btn-close-wallet');
         const walletModal = document.getElementById('wallet-modal');
 
         if (btnCloseWallet && walletModal) {
-            btnCloseWallet.addEventListener('click', () => {
-                walletModal.close();
-            });
+            btnCloseWallet.onclick = () => walletModal.close();
         }
 
         const tabs = document.querySelectorAll('.wallet-tab');
@@ -147,21 +145,20 @@ const UI = {
         const tabHistory = document.getElementById('tab-history');
         const transLabel = document.getElementById('transaction-label');
         const btnConfirm = document.getElementById('btn-confirm-transaction');
-        
+
         let currentMode = 'deposit';
 
         tabs.forEach(tab => {
-            tab.addEventListener('click', (e) => {
+            tab.onclick = (e) => {
                 tabs.forEach(t => t.classList.remove('active'));
                 e.target.classList.add('active');
 
                 const tabName = e.target.dataset.tab;
-                
                 const msgEl = document.getElementById('transaction-msg');
-                if(msgEl) msgEl.textContent = '';
-                
+                if (msgEl) msgEl.textContent = '';
+
                 const inEl = document.getElementById('transaction-input');
-                if(inEl) inEl.value = '';
+                if (inEl) inEl.value = '';
 
                 if (tabName === 'history') {
                     if (tabTransaction) tabTransaction.style.display = 'none';
@@ -170,7 +167,7 @@ const UI = {
                     if (tabTransaction) tabTransaction.style.display = 'block';
                     if (tabHistory) tabHistory.style.display = 'none';
                     currentMode = tabName;
-                    
+
                     if (currentMode === 'deposit') {
                         if (transLabel) transLabel.textContent = 'Cantidad a ingresar';
                         if (btnConfirm) {
@@ -185,70 +182,81 @@ const UI = {
                         }
                     }
                 }
-            });
+            };
         });
 
+        // --- CORRECCIÓN DE EVENTOS DUPLICADOS ---
         const quickBtns = document.querySelectorAll('.btn-quick');
         const inputTrans = document.getElementById('transaction-input');
-        
+        const msgBox = document.getElementById('transaction-msg');
+
         quickBtns.forEach(btn => {
-            btn.addEventListener('click', (e) => {
+            btn.onclick = (e) => {
                 if (!inputTrans) return;
+
                 if (e.target.id === 'btn-max-amount') {
                     if (currentMode === 'withdraw') {
                         const user = Storage.getUser();
                         if (user) inputTrans.value = user.balance.toFixed(2);
                     } else {
-                        inputTrans.value = 1000.00;
+                        inputTrans.value = "1000.00";
                     }
                 } else {
-                    const val = parseFloat(e.target.dataset.val);
+                    const val = parseFloat(e.target.dataset.val) || 0;
                     const currentVal = parseFloat(inputTrans.value) || 0;
-                    inputTrans.value = currentVal + val;
+                    inputTrans.value = (currentVal + val).toFixed(2);
                 }
-            });
+            };
         });
 
-        const msgBox = document.getElementById('transaction-msg');
-        
         if (btnConfirm) {
-            btnConfirm.addEventListener('click', () => {
+            btnConfirm.onclick = () => {
                 const amount = parseFloat(inputTrans ? inputTrans.value : 0);
-                
+
                 if (!amount || amount <= 0) {
-                    if(msgBox) { msgBox.textContent = 'Pon una cantidad válida'; msgBox.style.color = '#ef4444'; }
+                    if (msgBox) {
+                        msgBox.textContent = 'Pon una cantidad válida';
+                        msgBox.style.color = '#ef4444';
+                    }
                     return;
                 }
 
                 const user = Storage.getUser();
                 if (!user) return;
-                
+
                 if (currentMode === 'withdraw' && amount > user.balance) {
-                    if(msgBox) { msgBox.textContent = 'Saldo insuficiente'; msgBox.style.color = '#ef4444'; }
+                    if (msgBox) {
+                        msgBox.textContent = 'Saldo insuficiente';
+                        msgBox.style.color = '#ef4444';
+                    }
                     return;
                 }
 
                 const originalText = btnConfirm.textContent;
                 btnConfirm.textContent = 'Procesando...';
                 btnConfirm.disabled = true;
-                if(msgBox) msgBox.textContent = '';
+                if (msgBox) msgBox.textContent = '';
 
                 setTimeout(() => {
                     const finalAmount = currentMode === 'deposit' ? amount : -amount;
                     Storage.updateBalance(finalAmount, currentMode === 'deposit');
-                    
-                    if(msgBox) { msgBox.textContent = '¡Transacción completada! ✔️'; msgBox.style.color = '#10b981'; msgBox.style.textShadow = '0 0 10px rgba(16, 185, 129, 0.5)'; }
-                    if(inputTrans) inputTrans.value = '';
-                    
-                    // Animación suave para el contador de saldo
+
+                    if (msgBox) {
+                        msgBox.textContent = '¡Transacción completada! ✔️';
+                        msgBox.style.color = '#10b981';
+                        msgBox.style.textShadow = '0 0 10px rgba(16, 185, 129, 0.5)';
+                    }
+
+                    if (inputTrans) inputTrans.value = '';
+
                     const balanceEl = document.getElementById('wallet-balance');
-                    const user = Storage.getUser();
-                    if (balanceEl && user) {
-                        let start = parseFloat(balanceEl.textContent);
-                        let end = user.balance;
+                    const updatedUser = Storage.getUser();
+                    if (balanceEl && updatedUser) {
+                        let start = parseFloat(balanceEl.textContent.replace(/[^\d.-]/g, '')) || 0;
+                        let end = updatedUser.balance;
                         let duration = 1000;
                         let startTime = null;
-                        
+
                         function animation(currentTime) {
                             if (startTime === null) startTime = currentTime;
                             const timeElapsed = currentTime - startTime;
@@ -259,17 +267,17 @@ const UI = {
                         }
                         requestAnimationFrame(animation);
                     }
-                    
+
                     btnConfirm.textContent = originalText;
                     btnConfirm.disabled = false;
-                    
-                    setTimeout(() => { if(msgBox) msgBox.textContent = ''; }, 3000);
-                }, 1000);
-            });
-        }
-    },
 
-    updateWalletModalUI: function() {
+                    setTimeout(() => { if (msgBox) msgBox.textContent = ''; }, 3000);
+                }, 1000);
+            };
+        }
+    }, // <-- ESTA LLAVE Y ESTA COMA SON LAS QUE FALTABAN
+
+    updateWalletModalUI: function () {
         const user = Storage.getUser();
         if (!user) return;
 
@@ -284,7 +292,7 @@ const UI = {
 
         if (transactionsList) {
             transactionsList.innerHTML = '';
-            
+
             if (!user.transactions || user.transactions.length === 0) {
                 transactionsList.innerHTML = '<li style="color: #94a3b8; font-style: italic;">No hay transacciones recientes.</li>';
             } else {
@@ -297,13 +305,13 @@ const UI = {
                     li.style.justifyContent = 'space-between';
                     li.style.alignItems = 'center';
                     li.style.color = '#fff';
-                    
+
                     const isDeposit = tx.type === 'deposit';
                     const typeText = isDeposit ? 'Depósito' : 'Retiro';
                     const color = isDeposit ? '#10b981' : '#ef4444';
                     const sign = isDeposit ? '+' : '-';
                     const icon = isDeposit ? '⬇️' : '⬆️';
-                    
+
                     li.innerHTML = `
                         <div style="display: flex; gap: 10px; align-items: center;">
                             <span>${icon}</span>
@@ -319,4 +327,4 @@ const UI = {
             }
         }
     }
-};
+}
