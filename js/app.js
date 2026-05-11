@@ -1,4 +1,4 @@
-// Inicialización principal de la App y lógica
+﻿// Inicialización principal de la App y lógica
 const games = [
     { id: "rocket", title: "Rocket Crash", category: "Originals", bg: "url('assets/images/games/rocket.jpg')", url: "pages/rocket.html" },
     { id: "aviator", title: "Aviator Islands", category: "Originals", bg: "url('assets/images/games/aviator.jpg')", url: "pages/aviator.html" },
@@ -254,10 +254,6 @@ function initGatingLogic() {
                 e.preventDefault();
                 e.stopPropagation();
                 if (typeof UI !== 'undefined') UI.openWalletModal();
-            } else if (e.target.closest('.user-profile-btn')) {
-                e.preventDefault();
-                e.stopPropagation();
-                openProfileModal();
             }
         }
     }, true);
@@ -351,3 +347,4 @@ function initUserProfile() {
 
 // Funciones globales expuestas para mejor separación y accesibilidad
 window.renderGames = renderGames;
+

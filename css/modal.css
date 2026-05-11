@@ -221,6 +221,12 @@
     font-weight: bold;
 }
 
+.hub-content p a {
+    outline: none !important;
+    text-decoration: none;
+    box-shadow: none;
+}
+
 .hub-rta {
     font-size: 0.8rem;
     color: #666;

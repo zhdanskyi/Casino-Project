@@ -48,7 +48,7 @@ const UI = {
         if (user) {
             nameElements.forEach(el => { el.textContent = user.username; });
             avatarElements.forEach(el => { 
-                el.innerHTML = `<img src="${user.avatar}" style="width:100%; height:100%; border-radius:50%;">`; 
+                el.innerHTML = `<img src="${user.avatar}" style="width:100%; height:100%; border-radius:50%; object-fit: cover;">`; 
             });
         } else {
             nameElements.forEach(el => { el.textContent = "Iniciar Sesión"; });
@@ -82,7 +82,7 @@ const UI = {
         users.forEach(u => {
             list.innerHTML += `
                 <div class="profile-card" data-username="${u.username}" style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); transition: all 0.2s;">
-                    <img src="${u.avatar}" style="width: 50px; height: 50px; border-radius: 50%; border: 2px solid #0ea5e9; margin-bottom: 10px;">
+                    <img src="${u.avatar}" style="width: 50px; height: 50px; border-radius: 50%; border: 2px solid #0ea5e9; margin-bottom: 10px; object-fit: cover;">
                     <div style="font-weight: 600; color: #fff;">${u.username}</div>
                     <div style="font-size: 0.8em; color: #10b981;">${Formatter.currency(u.balance, u.currency)}</div>
                 </div>

@@ -56,7 +56,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         const user = getUserData();
-        if (!user) return Notifications.error("No se encontró usuario activo");
+        if (!user) {
+            const loginModal = document.getElementById('login-modal');
+            if (loginModal) loginModal.showModal();
+            return Notifications.error("Debes iniciar sesión para apostar.");
+        }
         
         if (user.balance < amount) {
             return Notifications.error("Saldo insuficiente");
@@ -243,6 +247,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const user = getUserData();
             if (user && elements.betAmount) {
                 elements.betAmount.value = user.balance.toFixed(2);
+            } else if (!user) {
+                const loginModal = document.getElementById('login-modal');
+                if (loginModal) loginModal.showModal();
+                if (typeof Notifications !== 'undefined') Notifications.error("Debes iniciar sesión para apostar.");
             }
         });
     }
