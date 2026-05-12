@@ -1,0 +1,142 @@
+/* Variables principales del tema */
+:root {
+  --bg-main: #050505;
+  --bg-card: #111111;
+  --bg-card-hover: #1a1a1a;
+  --cyan: #00ffcc;
+  --magenta: #ff007f;
+  --yellow: #ffcc00;
+  --text: #f2f2f2;
+  --text-muted: #a0aab5;
+  --border: rgba(255, 255, 255, 0.15);
+  --glow-cyan: 0 0 15px rgba(0, 255, 204, 0.5), 0 0 30px rgba(0, 255, 204, 0.3);
+  --glow-magenta: 0 0 15px rgba(255, 0, 127, 0.5), 0 0 30px rgba(255, 0, 127, 0.3);
+  --glass-bg: rgba(10, 10, 10, 0.8);
+  --glass-border: 2px solid rgba(255, 255, 255, 0.1);
+  --font-main: 'Inter', system-ui, sans-serif;
+  --topbar-height: 80px;
+  --container-width: 1400px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--bg-main);
+  color: var(--text);
+  font-family: var(--font-main);
+  overflow-x: hidden;
+  min-height: 100vh;
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
+  transition: background 1s ease;
+}
+
+/* Sistema de botones premium */
+.btn-primary, .btn-secondary, .btn-success, .btn-danger, .add-funds-btn {
+  padding: 14px 28px;
+  border-radius: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  position: relative;
+  overflow: hidden;
+  border: 2px solid rgba(255,255,255,0.15);
+  box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #00ffcc 0%, #0088ff 100%);
+  color: #000;
+  box-shadow: 0 0 25px rgba(0, 255, 204, 0.4);
+}
+
+.btn-primary:hover {
+  transform: translateY(-4px) scale(1.03);
+  box-shadow: 0 0 40px rgba(0, 255, 204, 0.7);
+  filter: brightness(1.1);
+}
+
+.btn-secondary {
+  background: linear-gradient(135deg, #ff007f 0%, #7f00ff 100%);
+  color: #fff;
+  box-shadow: 0 0 25px rgba(255, 0, 127, 0.4);
+}
+
+.btn-secondary:hover {
+  transform: translateY(-4px) scale(1.03);
+  box-shadow: 0 0 40px rgba(255, 0, 127, 0.7);
+}
+
+.btn-success {
+  background: linear-gradient(135deg, #00ff66 0%, #009933 100%);
+  color: #000;
+  box-shadow: 0 0 25px rgba(0, 255, 102, 0.4);
+}
+
+.btn-success:hover {
+  transform: translateY(-4px) scale(1.03);
+  box-shadow: 0 0 40px rgba(0, 255, 102, 0.7);
+}
+
+.add-funds-btn {
+  background: linear-gradient(135deg, #ffcc00 0%, #ff8800 100%);
+  color: #000;
+  font-weight: 900;
+  padding: 10px 20px;
+  font-size: 15px;
+}
+
+.add-funds-btn:hover {
+  box-shadow: 0 0 30px rgba(255, 204, 0, 0.6);
+  transform: scale(1.05);
+}
+
+/* Efecto al presionar cualquier botón */
+.btn-primary:active, .btn-secondary:active, .btn-success:active, .add-funds-btn:active {
+  transform: scale(0.95);
+  filter: brightness(0.9);
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+ul {
+  list-style: none;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-family: var(--font-main);
+  color: var(--text);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-main);
+}
+::-webkit-scrollbar-thumb {
+  background: #222222;
+  border-radius: 5px;
+  border: 2px solid var(--bg-main);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--magenta);
+}

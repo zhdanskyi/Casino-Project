@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rocket Crash | CasinoHub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/games.css">
+    <link rel="stylesheet" href="../css/animations.css">
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <i class="fa-solid fa-dice-d20"></i> CasinoHub
+        </div>
+        <nav class="sidebar-nav">
+            <a href="../index.html" class="nav-item">
+                <i class="fa-solid fa-house"></i> Inicio
+            </a>
+            <a href="../index.html#games-section" class="nav-item active">
+                <i class="fa-solid fa-gamepad"></i> Juegos
+            </a>
+            <a href="bonuses.html" class="nav-item">
+                <i class="fa-solid fa-gift"></i> Promociones
+            </a>
+            <a href="profile.html" class="nav-item">
+                <i class="fa-solid fa-user"></i> Perfil
+            </a>
+        </nav>
+    </aside>
+
+    <header class="topbar">
+        <div class="user-controls">
+            <div class="balance-display">
+                <i class="fa-solid fa-wallet"></i>
+                <span id="userBalance" class="balance-amount">0.00 EUR</span>
+            </div>
+            <button id="addFundsBtn" class="add-funds-btn">+ Añadir Saldo</button>
+            <a href="profile.html" class="user-profile-btn">
+                <div class="user-avatar" id="userAvatarBtn">J</div>
+                <span id="userNameBtn">Jugador</span>
+            </a>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="game-layout">
+            <div class="game-sidebar">
+                <div class="bet-controls">
+                    <h3>Hacer Apuesta</h3>
+                    <div class="input-group">
+                        <label>Importe (EUR)</label>
+                        <input type="number" id="betAmount" value="10.00" step="1.00" min="1.00">
+                    </div>
+                    <div class="bet-quick-actions">
+                        <button class="btn-secondary" id="btnHalfBet">1/2</button>
+                        <button class="btn-secondary" id="btnDoubleBet">2x</button>
+                        <button class="btn-secondary" id="btnMaxBet">MAX</button>
+                    </div>
+                    <button id="btnBet" class="btn-primary w-100 mt-20">Apostar</button>
+                    <button id="btnCashout" class="btn-success w-100 mt-20 hidden">Retirar</button>
+                </div>
+                
+                <div class="history-panel mt-20">
+                    <h3>Últimos Vuelos</h3>
+                    <div class="history-list" id="crashHistory">
+                        <!-- History injected here -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="game-view rocket-view">
+                <div id="multiplierDisplay" class="multiplier-display">1.00x</div>
+                <div id="gameStatus" class="game-status">Esperando apuesta...</div>
+                
+                <div class="space-scene">
+                    <div class="stars"></div>
+                    <div id="rocket" class="css-rocket">
+                        <div class="rocket-body">
+                            <div class="rocket-window"></div>
+                        </div>
+                        <div class="rocket-fin fin-left"></div>
+                        <div class="rocket-fin fin-right"></div>
+                        <div class="rocket-exhaust" id="exhaust"></div>
+                    </div>
+                    <div id="explosion" class="css-explosion hidden"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="toast-container"></div>
+
+    <script src="../js/utils/random.js"></script>
+    <script src="../js/utils/formatter.js"></script>
+    <script src="../js/storage.js"></script>
+    <script src="../js/notifications.js"></script>
+    <script src="../js/ui.js"></script>
+    <script src="../js/games/rocket.js"></script>
+</body>
+</html>

@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aviator Islands | CasinoHub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/games.css">
+    <link rel="stylesheet" href="../css/animations.css">
+    <style>
+        .aviator-view {
+            background: radial-gradient(circle at center, #1a2a6c, #111);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .ocean {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 20%;
+            background: linear-gradient(to bottom, #001f3f, #000);
+            border-top: 4px solid var(--cyan);
+            box-shadow: 0 -10px 30px rgba(0, 255, 255, 0.3);
+            z-index: 5;
+        }
+
+        .island {
+            position: absolute;
+            bottom: 15%;
+            width: 220px;
+            height: 80px;
+            background: linear-gradient(to top, #0f3443, #34e89e);
+            border-radius: 60px 60px 10px 10px;
+            box-shadow: 0 0 20px rgba(52, 232, 158, 0.4);
+            z-index: 6;
+        }
+
+        .island::before {
+            content: '';
+            position: absolute;
+            top: -30px; left: 50%;
+            width: 12px; height: 40px;
+            background: #4b2c20;
+            border-radius: 5px;
+        }
+        .island::after {
+            content: '';
+            position: absolute;
+            top: -50px; left: calc(50% - 24px);
+            width: 60px; height: 35px;
+            background: #006400;
+            border-radius: 50%;
+            box-shadow: 0 0 15px #00ff00;
+        }
+
+        .css-plane {
+            position: absolute;
+            left: 15%;
+            bottom: 50%;
+            width: 80px;
+            height: 25px;
+            z-index: 20;
+            transition: transform 0.1s linear;
+        }
+
+        .plane-body {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #eee, #999);
+            border-radius: 50% 100% 100% 50% / 50% 50% 50% 50%;
+            position: relative;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+            border: 1px solid #fff;
+        }
+
+        .plane-wing {
+            position: absolute;
+            width: 45px;
+            height: 12px;
+            background: var(--magenta);
+            top: -5px;
+            left: 20px;
+            border-radius: 5px 30px 0 0;
+            transform: skewX(-30deg);
+            box-shadow: 0 0 10px var(--magenta);
+        }
+
+        .plane-tail {
+            position: absolute;
+            width: 15px;
+            height: 25px;
+            background: var(--magenta);
+            top: -20px;
+            left: 0;
+            border-radius: 5px 5px 0 0;
+            transform: skewX(-20deg);
+            box-shadow: 0 0 10px var(--magenta);
+        }
+
+        .plane-propeller {
+            position: absolute;
+            right: -8px;
+            top: 2px;
+            width: 8px;
+            height: 22px;
+            background: #fff;
+            border-radius: 10px;
+            animation: spinProp 0.05s linear infinite;
+            box-shadow: 0 0 5px #fff;
+        }
+
+        @keyframes spinProp {
+            0% { transform: scaleY(1); opacity: 0.8; }
+            50% { transform: scaleY(0.2); opacity: 0.3; }
+            100% { transform: scaleY(1); opacity: 0.8; }
+        }
+
+        .cloud {
+            position: absolute;
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.2);
+            backdrop-filter: blur(5px);
+            border-radius: 50px;
+            color: #fff;
+            z-index: 10;
+        }
+        
+        .crashed-plane {
+            filter: hue-rotate(180deg) blur(2px);
+            transform: rotate(90deg) translateY(500px) !important;
+            transition: all 2s ease-in !important;
+        }
+
+        .multiplier-display {
+            position: absolute;
+            top: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 64px;
+            font-weight: 900;
+            color: var(--cyan);
+            text-shadow: 0 0 20px var(--cyan), 0 0 40px rgba(0,0,0,0.5);
+            z-index: 30;
+        }
+
+        .game-status {
+            position: absolute;
+            top: 110px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 18px;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            z-index: 30;
+        }
+    </style>
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <i class="fa-solid fa-dice-d20"></i> CasinoHub
+        </div>
+        <nav class="sidebar-nav">
+            <a href="../index.html" class="nav-item">
+                <i class="fa-solid fa-house"></i> Inicio
+            </a>
+            <a href="../index.html#games-section" class="nav-item active">
+                <i class="fa-solid fa-gamepad"></i> Juegos
+            </a>
+            <a href="bonuses.html" class="nav-item">
+                <i class="fa-solid fa-gift"></i> Promociones
+            </a>
+            <a href="profile.html" class="nav-item">
+                <i class="fa-solid fa-user"></i> Perfil
+            </a>
+        </nav>
+    </aside>
+
+    <header class="topbar">
+        <div class="user-controls">
+            <div class="balance-display">
+                <i class="fa-solid fa-wallet"></i>
+                <span id="userBalance" class="balance-amount">0.00 EUR</span>
+            </div>
+            <button id="addFundsBtn" class="add-funds-btn">+ Añadir Saldo</button>
+            <a href="profile.html" class="user-profile-btn">
+                <div class="user-avatar" id="userAvatarBtn">J</div>
+                <span id="userNameBtn">Jugador</span>
+            </a>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="game-layout">
+            <div class="game-sidebar">
+                <div class="bet-controls">
+                    <h3>Apuesta Aviator</h3>
+                    <div class="input-group">
+                        <label>Importe (EUR)</label>
+                        <input type="number" id="betAmount" value="10.00" step="1.00" min="1.00">
+                    </div>
+                    <div class="bet-quick-actions">
+                        <button class="btn-secondary" id="btnHalfBet">1/2</button>
+                        <button class="btn-secondary" id="btnDoubleBet">2x</button>
+                        <button class="btn-secondary" id="btnMaxBet">MAX</button>
+                    </div>
+                    <button id="btnBet" class="btn-primary w-100 mt-20">Volar</button>
+                </div>
+            </div>
+
+            <div class="game-view aviator-view">
+                <div id="multiplierDisplay" class="multiplier-display" style="text-shadow: 0 0 10px #000;">1.00x</div>
+                <div id="gameStatus" class="game-status" style="color: #fff; text-shadow: 0 0 5px #000;">Esperando apuesta...</div>
+                <div id="countdownOverlay" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 100px; font-weight: 900; color: #fff; text-shadow: 0 0 20px var(--cyan); z-index: 50; display: none;">3</div>
+                
+                <div class="ocean"></div>
+                
+                <div id="islandContainer"></div>
+                
+                <div id="plane" class="css-plane">
+                    <div class="plane-tail"></div>
+                    <div class="plane-wing"></div>
+                    <div class="plane-body"></div>
+                    <div class="plane-propeller"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="toast-container"></div>
+
+    <script src="../js/utils/random.js"></script>
+    <script src="../js/utils/formatter.js"></script>
+    <script src="../js/storage.js"></script>
+    <script src="../js/notifications.js"></script>
+    <script src="../js/ui.js"></script>
+    <script src="../js/games/aviator.js"></script>
+</body>
+</html>

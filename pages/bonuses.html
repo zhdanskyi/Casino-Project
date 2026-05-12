@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Promociones | CasinoHub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/profile.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+    <link rel="stylesheet" href="../css/animations.css">
+</head>
+<body>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-logo">
+            <i class="fa-solid fa-dice-d20"></i> CasinoHub
+        </div>
+        <nav class="sidebar-nav">
+            <a href="../index.html" class="nav-item">
+                <i class="fa-solid fa-house"></i> Inicio
+            </a>
+            <a href="../index.html#games-section" class="nav-item">
+                <i class="fa-solid fa-gamepad"></i> Juegos
+            </a>
+            <a href="bonuses.html" class="nav-item active">
+                <i class="fa-solid fa-gift"></i> Promociones
+            </a>
+            <a href="profile.html" class="nav-item">
+                <i class="fa-solid fa-user"></i> Perfil
+            </a>
+        </nav>
+    </aside>
+
+    <header class="topbar">
+        <button id="mobileMenuBtn" class="mobile-menu-btn">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+        <div class="user-controls">
+            <div class="balance-display">
+                <i class="fa-solid fa-wallet"></i>
+                <span id="userBalance" class="balance-amount">0.00 EUR</span>
+            </div>
+            <button id="addFundsBtn" class="add-funds-btn">+ Añadir Saldo</button>
+            <a href="profile.html" class="user-profile-btn">
+                <div class="user-avatar" id="userAvatarBtn">J</div>
+                <span id="userNameBtn">Jugador</span>
+            </a>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <h2 class="section-title" style="margin-bottom: 30px;"><i class="fa-solid fa-gift"></i> Centro de Recompensas</h2>
+        
+        <div class="bonus-grid" id="bonusContainer">
+            <!-- Rendered by JS -->
+        </div>
+    </main>
+
+    <div id="toast-container"></div>
+
+    <script src="../js/utils/formatter.js"></script>
+    <script src="../js/storage.js"></script>
+    <script src="../js/notifications.js"></script>
+    <script src="../js/ui.js"></script>
+    <script src="../js/bonuses.js"></script>
+</body>
+</html>

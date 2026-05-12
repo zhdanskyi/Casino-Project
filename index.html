@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="CasinoHub - La plataforma de juegos online del futuro. Disfruta de Rocket Crash, Aviator, Slots y Poker con tecnología de vanguardia.">
+    <title>CasinoHub | Futuro del Juego</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/games.css">
+    <link rel="stylesheet" href="css/modal.css">
+    <link rel="stylesheet" href="css/animations.css">
+</head>
+
+<body>
+
+    <!-- Modal de Verificación de Edad -->
+    <dialog id="ageGateModal" class="age-gate-dialog hub-theme">
+        <div class="modal-content hub-content">
+            <div class="hub-logo">
+                <span class="hub-white">Casino</span><span class="hub-orange">hub</span>
+            </div>
+            <h2>Este es un Sitio Web para adultos</h2>
+            <div class="hub-badge">Notice to Users</div>
+            <p>Este sitio web contiene material restringido a menores de edad, que incluye juegos de azar y apuestas
+                explícitas. Al entrar, afirma que tiene por lo menos 18 años de edad o la mayoría de edad en la
+                jurisdicción desde que está accediendo al sitio web y que da consentimiento en ver contenido de apuestas
+                explícito.<br><br>
+                <a href="#" style="color: #ffa31a; text-decoration: none; font-weight: bold;">Aviso a las fuerzas del
+                    orden</a>
+            </p>
+            <div class="modal-actions hub-actions">
+                <button id="btnAcceptAge" class="btn hub-btn">Tengo 18 años o más - Entrar</button>
+                <button id="btnRejectAge" class="btn hub-btn">Soy menor de 18 años - Salir</button>
+            </div>
+            <div class="hub-footer">
+                Nuestra <a href="#">página de control parental</a> explica cómo<br>
+                bloquear fácilmente el acceso a este sitio.<br>
+                <a href="#">Términos de Servicio</a>
+            </div>
+            <div class="hub-rta">© CasinoHub.com, 2026 <strong>RTA®</strong></div>
+        </div>
+    </dialog>
+
+    <!-- Barra Superior Principal -->
+    <header class="topbar">
+        <div class="topbar-content">
+            <div class="topbar-left">
+                <!-- Logo del Casino -->
+                <div class="topbar-logo">
+                    <i class="fa-solid fa-dice-d20"></i> <span class="logo-text">CasinoHub</span>
+                </div>
+
+                <!-- Enlaces de Navegación -->
+                <nav class="topbar-nav" id="mobileNav">
+                    <a href="index.html" class="nav-item active">
+                        <i class="fa-solid fa-house"></i> Inicio
+                    </a>
+
+                    <!-- Menú Desplegable para Juegos -->
+                    <div class="mega-menu-wrapper">
+                        <a href="#games-section" class="nav-item">
+                            <i class="fa-solid fa-gamepad"></i> Juegos <i class="fa-solid fa-chevron-down"
+                                style="font-size: 12px; margin-left: 5px;"></i>
+                        </a>
+
+                        <div class="mega-menu">
+                            <a href="pages/aviator.html" class="mega-menu-item">
+                                <img src="assets/images/games/aviator.jpg" alt="Aviator">
+                                Aviator
+                            </a>
+                            <a href="pages/poker.html" class="mega-menu-item">
+                                <img src="assets/images/games/poker.jpg" alt="Poker">
+                                Cyber Poker
+                            </a>
+                            <a href="pages/mines.html" class="mega-menu-item">
+                                <img src="assets/images/games/mines.jpg" alt="Mines">
+                                Mines
+                            </a>
+                            <a href="pages/rocket.html" class="mega-menu-item">
+                                <img src="assets/images/games/rocket.jpg" alt="Rocket">
+                                Rocket Crash
+                            </a>
+                            <a href="pages/slots.html" class="mega-menu-item">
+                                <img src="assets/images/games/slots.jpg" alt="Slots">
+                                Slots
+                            </a>
+                        </div>
+                    </div>
+
+                    <a href="pages/bonuses.html" class="nav-item">
+                        <i class="fa-solid fa-gift"></i> Promociones
+                    </a>
+                </nav>
+            </div>
+
+            <div class="topbar-right">
+                <!-- Controles de Usuario (Saldo y Perfil) -->
+                <div class="user-controls">
+                    <div class="balance-display">
+                        <i class="fa-solid fa-wallet"></i>
+                        <span id="userBalance" class="balance-amount">0.00 EUR</span>
+                    </div>
+                    <button id="addFundsBtn" class="add-funds-btn"><i class="fa-solid fa-plus add-funds-icon"
+                            style="display:none;"></i><span class="add-funds-text">+ Añadir Saldo</span></button>
+                    <a href="#" class="user-profile-btn" style="cursor: pointer;">
+                        <div class="user-avatar" id="userAvatarBtn">J</div>
+                        <span id="userNameBtn">Jugador</span>
+                    </a>
+                </div>
+
+                <!-- Botón de Menú Móvil -->
+                <button id="mobileMenuBtn" class="mobile-menu-btn"><i class="fa-solid fa-bars"></i></button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Contenido Principal -->
+    <main class="main-content">
+        <div class="hero-carousel" id="heroCarousel">
+            <button class="carousel-btn prev" id="btnPrevSlide"><i class="fa-solid fa-chevron-left"></i></button>
+            <button class="carousel-btn next" id="btnNextSlide"><i class="fa-solid fa-chevron-right"></i></button>
+
+            <div class="carousel-track" id="carouselTrack">
+                <div class="hero-banner" style="background-image: url('assets/images/banners/casino.png');">
+                    <div class="hero-content">
+                        <h1>Bienvenido al <br><span class="neon-text">Futuro del Juego</span></h1>
+                        <p>Multiplica tus ganancias en nuestra plataforma de nueva generación. Juegos exclusivos y
+                            experiencia inmersiva de alto nivel.</p>
+                        <a href="#games-section" class="btn-primary">Explorar Juegos <i
+                                class="fa-solid fa-arrow-right"></i></a>
+                    </div>
+                </div>
+                <div class="hero-banner" style="background-image: url('assets/images/banners/rocket.png');">
+                    <div class="hero-content">
+                        <h1>Rocket <span class="neon-text">Crash</span></h1>
+                        <p>Alcanza multiplicadores increíbles en la inmensidad del espacio. ¿Hasta dónde serás capaz de
+                            llegar antes del crash?</p>
+                        <a href="pages/rocket.html" class="btn-primary">Despegar Ahora <i
+                                class="fa-solid fa-rocket"></i></a>
+                    </div>
+                </div>
+                <div class="hero-banner"
+                    style="background-image: url('https://images.unsplash.com/photo-1596838132731-3301c3fd4317?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80');">
+                    <div class="hero-content">
+                        <h1>Cyber <span class="neon-text">Poker</span></h1>
+                        <p>Demuestra tus habilidades en nuestras mesas holográficas de alta tensión contra jugadores de
+                            todo el mundo.</p>
+                        <a href="pages/poker.html" class="btn-primary">Entrar a la Mesa <i
+                                class="fa-solid fa-spade"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="carousel-indicators" id="carouselIndicators"></div>
+        </div>
+
+        <section id="games-section">
+            <h2 class="section-title"><i class="fa-solid fa-fire"></i> Juegos Destacados</h2>
+            <div class="games-grid" id="gamesContainer">
+                <!-- Los juegos se inyectan aquí mediante JS -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal de Billetera (Wallet) -->
+    <dialog id="wallet-modal" class="modal">
+        <div class="modal-content glass-effect">
+            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+                <img id="wallet-avatar" src="" alt="Avatar"
+                    style="width: 60px; height: 60px; border-radius: 50%; border: 2px solid #0ea5e9;">
+                <div style="text-align: left;">
+                    <h3 id="wallet-name" class="neon-text" style="margin-bottom: 5px;">Usuario</h3>
+                    <p style="color: #94a3b8; font-size: 0.9em;">Miembro VIP</p>
+                </div>
+                <button id="btn-close-wallet" class="btn-icon" style="margin-left: auto; align-self: flex-start;">
+                    <i class="fa-solid fa-xmark" style="font-size: 24px;"></i>
+                </button>
+            </div>
+
+            <!-- Tabs de navegacion -->
+            <div class="wallet-tabs">
+                <button class="wallet-tab active" data-tab="deposit">Depósito</button>
+                <button class="wallet-tab" data-tab="withdraw">Retiro</button>
+                <button class="wallet-tab" data-tab="history">Historial</button>
+            </div>
+
+            <div class="wallet-body">
+                <!-- Contenedor general de saldo, se mantiene comun en deposito y retiro -->
+                <div class="wallet-balance-box">
+                    <p>Saldo Actual</p>
+                    <div class="balance-display">
+                        <span id="wallet-balance">0.00</span> <span class="currency">€</span>
+                    </div>
+                </div>
+
+                <!-- Tab Deposito / Retiro (comparten estructura) -->
+                <div id="tab-transaction" class="tab-content active">
+                    <div class="transaction-form">
+                        <label id="transaction-label">Cantidad a ingresar</label>
+                        <div class="input-group">
+                            <input type="number" id="transaction-input" placeholder="0.00" min="0" step="10">
+                            <span class="currency-addon">€</span>
+                        </div>
+
+                        <div class="quick-amounts">
+                            <button class="btn-quick" data-val="10">+10</button>
+                            <button class="btn-quick" data-val="50">+50</button>
+                            <button class="btn-quick" data-val="100">+100</button>
+                            <button class="btn-quick" id="btn-max-amount">MAX</button>
+                        </div>
+
+                        <button id="btn-confirm-transaction" class="btn-primary btn-full"
+                            style="border: none; cursor: pointer;">Confirmar Transacción</button>
+                        <p id="transaction-msg" class="transaction-msg"></p>
+                    </div>
+                </div>
+
+                <!-- Tab Historial -->
+                <div id="tab-history" class="tab-content" style="display: none;">
+                    <ul id="wallet-transactions" class="history-list">
+                        <!-- transacciones inyectadas por js -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </dialog>
+
+    <!-- Modal de Inicio de Sesión y Selección de Perfil -->
+    <dialog id="login-modal" class="modal">
+        <div class="modal-content glass-effect" style="margin: auto;">
+            <div style="margin-bottom: 30px;">
+                <i class="fa-solid fa-user-circle"
+                    style="font-size: 40px; color: var(--magenta); margin-bottom: 15px;"></i>
+                <h2 class="neon-text">Bienvenido a CasinoHub</h2>
+                <p style="color: #94a3b8; margin-top: 10px;">Selecciona tu perfil o crea uno nuevo</p>
+            </div>
+
+            <div id="profiles-list"
+                style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 30px;">
+                <!-- Los perfiles se inyectan aquí mediante JS -->
+            </div>
+
+            <div
+                style="background: rgba(0,0,0,0.2); padding: 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);">
+                <h4 style="margin-bottom: 15px; color: #94a3b8;">Crear nuevo perfil</h4>
+                <div class="input-group" style="margin-bottom: 15px;">
+                    <input type="text" id="new-profile-name" placeholder="Tu nombre..."
+                        style="flex: 1; background: transparent; border: none; color: #fff; padding: 12px; outline: none;">
+                </div>
+                <button id="btn-create-profile" class="btn-primary"
+                    style="width: 100%; border: none; cursor: pointer;">Registrarse y Jugar</button>
+            </div>
+            <button id="btn-close-login" class="btn-secondary"
+                style="margin-top: 15px; width: 100%; cursor: pointer;">Cerrar</button>
+        </div>
+    </dialog>
+
+    <!-- Modal de Pase VIP -->
+    <dialog id="vip-modal" class="modal">
+        <div class="modal-content glass-effect" style="text-align: center; max-width: 400px; margin: auto;">
+            <i class="fa-solid fa-crown"
+                style="font-size: 48px; color: #eab308; margin-bottom: 20px; text-shadow: 0 0 20px rgba(234, 179, 8, 0.5);"></i>
+            <h2 class="neon-text" style="color: #eab308; margin-bottom: 15px;">Pase VIP Exclusivo</h2>
+            <p style="color: #94a3b8; margin-bottom: 20px;">Desbloquea el acceso a Neon Mines y recompensas exclusivas
+                por <strong style="color: #fff;">1000 EUR</strong>.</p>
+
+            <button id="btn-buy-vip" class="btn-primary"
+                style="width: 100%; margin-bottom: 15px; background: linear-gradient(45deg, #eab308, #ca8a04); color: #000; font-weight: 800; border: none; cursor: pointer;">Comprar
+                VIP</button>
+            <button id="btn-close-vip" class="btn-secondary"
+                style="width: 100%; border: none; cursor: pointer;">Cancelar</button>
+        </div>
+    </dialog>
+
+    <!-- Contenedor de Notificaciones Toast -->
+    <div id="toast-container"></div>
+
+    <!-- Modal de Perfil de Usuario -->
+    <dialog id="profile-modal" class="modal">
+        <div class="modal-content glass-effect" style="margin: auto; max-width: 400px; text-align: center;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px;">
+                <h3 class="neon-text" style="margin: 0; font-size: 1.5rem;">Mi Perfil</h3>
+                <button id="btn-close-profile" class="btn-icon">
+                    <i class="fa-solid fa-xmark" style="font-size: 24px;"></i>
+                </button>
+            </div>
+            <div style="margin-bottom: 30px;">
+                <img id="profile-modal-avatar" src="" alt="Avatar"
+                    style="width: 100px; height: 100px; border-radius: 50%; border: 3px solid var(--magenta); margin-bottom: 15px; box-shadow: 0 0 15px rgba(236, 72, 153, 0.5);">
+                <h2 id="profile-modal-name" style="color: #fff; margin-bottom: 5px;">Usuario</h2>
+                <span
+                    style="background: rgba(16, 185, 129, 0.2); color: #10b981; padding: 4px 10px; border-radius: 20px; font-size: 0.8em; font-weight: bold;">Jugador
+                    Activo</span>
+            </div>
+
+            <button id="btn-logout" class="btn-secondary"
+                style="width: 100%; border: 1px solid #ef4444; color: #ef4444; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;">
+                <i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión / Cambiar Cuenta
+            </button>
+        </div>
+    </dialog>
+
+    <!-- Botón Reset DB (Herramienta de Testing) -->
+    <button onclick="localStorage.clear(); sessionStorage.clear(); location.reload();"
+        style="position: fixed; bottom: 20px; right: 20px; z-index: 9999; background: #ef4444; color: white; padding: 12px 15px; border-radius: 8px; cursor: pointer; font-weight: bold; border: none; box-shadow: 0 4px 10px rgba(239, 68, 68, 0.4);">
+        💣 Reset DB
+    </button>
+
+    <!-- Scripts -->
+    <script src="js/utils/formatter.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/notifications.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/app.js"></script>
+</body>
+
+</html>

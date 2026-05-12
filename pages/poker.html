@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyber Poker | CasinoHub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/games.css">
+    <link rel="stylesheet" href="../css/animations.css">
+    <style>
+        .poker-view {
+            background: radial-gradient(circle, #004d00 0%, #001a00 100%);
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 40px;
+        }
+
+        .poker-table {
+            width: 100%;
+            height: 100%;
+            border: 10px solid #5c3a21;
+            border-radius: 200px;
+            background: #0a5223;
+            box-shadow: inset 0 0 50px rgba(0,0,0,0.8), 0 0 20px rgba(0,255,0,0.2);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+        }
+
+        .cards-container {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            min-height: 120px;
+        }
+
+        .playing-card {
+            width: 80px;
+            height: 120px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 5px 10px;
+            font-size: 20px;
+            font-weight: bold;
+            color: #000;
+            position: relative;
+        }
+
+        .playing-card.red {
+            color: #ff0000;
+        }
+
+        .card-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 36px;
+        }
+
+        .card-bottom-right {
+            align-self: flex-end;
+            transform: rotate(180deg);
+        }
+
+        .card-back {
+            background: repeating-linear-gradient(45deg, #0000aa, #0000aa 10px, #0000dd 10px, #0000dd 20px);
+            border: 4px solid #fff;
+            color: transparent;
+        }
+
+        .poker-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            z-index: 10;
+        }
+
+        .poker-actions button {
+            padding: 10px 30px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 30px;
+            transition: all 0.2s;
+        }
+
+        .btn-fold { background: #ff3333; color: #fff; }
+        .btn-call { background: #33cc33; color: #fff; }
+        .btn-raise { background: #ffcc00; color: #000; }
+
+        .game-status {
+            color: #fff;
+            font-size: 24px;
+            font-weight: bold;
+            text-shadow: 0 0 10px #000;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 20;
+        }
+
+        .poker-chip {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #eab308 30%, #b45309 90%);
+            border: 3px dashed #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+            margin: -5px;
+            transition: all 0.3s ease;
+        }
+        
+        .community-area {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            min-height: 120px;
+            margin: 20px 0;
+            padding: 10px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.1);
+            min-width: 480px;
+        }
+        
+        .pot-container {
+            position: absolute;
+            top: 50%;
+            left: 15%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .pot-amount {
+            color: #eab308;
+            font-weight: bold;
+            text-shadow: 0 0 5px #000;
+            background: rgba(0,0,0,0.5);
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <i class="fa-solid fa-dice-d20"></i> CasinoHub
+        </div>
+        <nav class="sidebar-nav">
+            <a href="../index.html" class="nav-item">
+                <i class="fa-solid fa-house"></i> Inicio
+            </a>
+            <a href="../index.html#games-section" class="nav-item active">
+                <i class="fa-solid fa-gamepad"></i> Juegos
+            </a>
+            <a href="bonuses.html" class="nav-item">
+                <i class="fa-solid fa-gift"></i> Promociones
+            </a>
+            <a href="profile.html" class="nav-item">
+                <i class="fa-solid fa-user"></i> Perfil
+            </a>
+        </nav>
+    </aside>
+
+    <header class="topbar">
+        <div class="user-controls">
+            <div class="balance-display">
+                <i class="fa-solid fa-wallet"></i>
+                <span id="userBalance" class="balance-amount">0.00 EUR</span>
+            </div>
+            <button id="addFundsBtn" class="add-funds-btn">+ Añadir Saldo</button>
+            <a href="profile.html" class="user-profile-btn">
+                <div class="user-avatar" id="userAvatarBtn">J</div>
+                <span id="userNameBtn">Jugador</span>
+            </a>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="game-layout">
+            <div class="game-sidebar">
+                <div class="bet-controls">
+                    <h3>Apuesta Poker</h3>
+                    <div class="input-group">
+                        <label>Apuesta Inicial (EUR)</label>
+                        <input type="number" id="betAmount" value="5.00" step="1.00" min="1.00">
+                    </div>
+                    <button id="btnDeal" class="btn-primary w-100 mt-20">REPARTIR</button>
+                </div>
+            </div>
+
+            <div class="game-view poker-view">
+                <div class="poker-table">
+                    <!-- Dealer cards -->
+                    <div class="cards-container" id="dealerCards">
+                        <div class="playing-card card-back"></div>
+                        <div class="playing-card card-back"></div>
+                    </div>
+                    
+                    <div class="pot-container">
+                        <div id="potChips" style="display: flex; flex-wrap: wrap; width: 80px; justify-content: center;"></div>
+                        <div class="pot-amount" id="potAmountText">Bote: 0€</div>
+                    </div>
+
+                    <div id="pokerStatus" class="game-status">Esperando apuesta...</div>
+                    
+                    <!-- Community Cards -->
+                    <div class="community-area" id="communityCards">
+                        <!-- injected by JS -->
+                    </div>
+
+                    <!-- Player cards -->
+                    <div class="cards-container" id="playerCards">
+                        <div class="playing-card card-back"></div>
+                        <div class="playing-card card-back"></div>
+                    </div>
+                </div>
+
+                <div class="poker-actions" id="pokerActions" style="display: none;">
+                    <button id="btnFold" class="btn-fold">Retirarse</button>
+                    <button id="btnCall" class="btn-call">Igualar</button>
+                    <button id="btnRaise" class="btn-raise">Subir (x2)</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="toast-container"></div>
+
+    <script src="../js/utils/random.js"></script>
+    <script src="../js/utils/formatter.js"></script>
+    <script src="../js/storage.js"></script>
+    <script src="../js/notifications.js"></script>
+    <script src="../js/ui.js"></script>
+    <script src="../js/games/poker.js"></script>
+</body>
+</html>

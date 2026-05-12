@@ -1,0 +1,408 @@
+/* Cuadrícula de Juegos */
+.section-title {
+  font-size: 24px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.section-title i {
+  color: var(--cyan);
+}
+
+.games-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.span-1 {
+  grid-column: span 1;
+}
+
+.span-2 {
+  grid-column: span 2;
+}
+
+.span-3 {
+  grid-column: span 3;
+}
+
+.game-card {
+  background: var(--bg-card);
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  transition: all 0.3s ease;
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+}
+
+.game-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--cyan);
+  box-shadow: var(--glow-cyan);
+}
+
+.game-image-container {
+  height: 250px;
+  width: 100%;
+  background: #000;
+  position: relative;
+  overflow: hidden;
+}
+
+.game-card-bg {
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.game-card:hover .game-card-bg {
+  transform: scale(1.1);
+}
+
+.game-card-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(5, 5, 5, 0.85); /* Fondo más negro para el hover */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.game-card:hover .game-card-overlay {
+  opacity: 1;
+}
+
+.play-btn {
+  background: var(--cyan);
+  color: var(--bg-main);
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transform: translateY(20px);
+  transition: all 0.3s ease;
+}
+
+.game-card:hover .play-btn {
+  transform: translateY(0);
+}
+
+.game-info {
+  padding: 15px;
+  height: 30%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.game-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.game-category {
+  font-size: 12px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Diseño del Juego */
+.game-layout {
+  display: flex;
+  gap: 20px;
+  height: calc(100vh - var(--topbar-height) - 60px);
+}
+
+.game-sidebar {
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.game-view {
+  flex-grow: 1;
+  background: var(--bg-card);
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.bet-controls, .history-panel, .profile-card, .bonus-card {
+  background: var(--bg-card);
+  border-radius: 16px;
+  padding: 20px;
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+.bet-controls button, .bet-controls .input-group {
+  flex-shrink: 0;
+}
+
+.bet-controls h3, .history-panel h3 {
+  margin-bottom: 15px;
+  color: var(--cyan);
+}
+
+.input-group {
+  margin-bottom: 15px;
+}
+
+.input-group label {
+  display: block;
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 5px;
+}
+
+.input-group input {
+  width: 100%;
+  background: rgba(0,0,0,0.5);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 12px;
+  border-radius: 8px;
+  font-family: var(--font-main);
+  font-size: 16px;
+}
+
+.input-group input:focus {
+  outline: none;
+  border-color: var(--cyan);
+  box-shadow: 0 0 10px rgba(0,255,255,0.2);
+}
+
+.bet-quick-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.bet-quick-actions button {
+  flex: 1;
+  padding: 8px;
+  font-size: 12px;
+}
+
+.w-100 { width: 100%; }
+.mt-20 { margin-top: 20px; }
+.hidden { display: none !important; }
+
+.btn-success {
+  background: linear-gradient(45deg, #00ff00, #008800);
+  color: #000;
+  padding: 15px 20px;
+  border-radius: 10px;
+  font-weight: 800;
+  font-size: 16px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  text-transform: uppercase;
+  box-shadow: 0 0 15px rgba(0,255,0,0.5);
+  position: relative;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.btn-success:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 0 25px rgba(0,255,0,0.8), 0 0 10px rgba(0,255,0,0.4) inset;
+}
+
+.btn-success:active {
+  transform: translateY(1px);
+}
+
+/* Específico de Rocket Crash */
+.rocket-view {
+  background: linear-gradient(to bottom, #050505 0%, #1a0033 100%); /* Fondo más negro/magenta en vez de azul oscuro */
+}
+
+.multiplier-display {
+  position: absolute;
+  top: 10%;
+  font-size: 72px;
+  font-weight: 800;
+  color: #fff;
+  text-shadow: 0 0 20px var(--cyan);
+  z-index: 10;
+  transition: color 0.3s;
+}
+
+.multiplier-display.crashed {
+  color: #ff3333;
+  text-shadow: 0 0 20px #ff3333;
+}
+
+.game-status {
+  position: absolute;
+  top: 5%;
+  font-size: 18px;
+  color: var(--magenta);
+  z-index: 10;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.space-scene {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  padding-bottom: 50px;
+}
+
+.stars {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-image: 
+    radial-gradient(2px 2px at 20px 30px, #eee, rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 40px 70px, #fff, rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 50px 160px, #ddd, rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 90px 40px, #fff, rgba(0,0,0,0));
+  background-repeat: repeat;
+  background-size: 200px 200px;
+  animation: starsAnim 10s linear infinite;
+  opacity: 0.5;
+}
+
+@keyframes starsAnim {
+  from { background-position: 0 0; }
+  to { background-position: 0 1000px; }
+}
+
+.css-rocket {
+  width: 40px;
+  height: 80px;
+  position: relative;
+  z-index: 5;
+  transition: transform 0.1s linear;
+}
+
+.rocket-body {
+  width: 40px;
+  height: 80px;
+  background: linear-gradient(to right, #e0e0e0, #fff, #b0b0b0);
+  border-radius: 50% 50% 10% 10% / 60% 60% 10% 10%;
+  position: relative;
+  box-shadow: inset 0 -5px 10px rgba(0,0,0,0.2);
+}
+
+.rocket-window {
+  width: 20px;
+  height: 20px;
+  background: #00ffff;
+  border-radius: 50%;
+  position: absolute;
+  top: 20px;
+  left: 10px;
+  border: 3px solid #666;
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.5), 0 0 10px var(--cyan);
+}
+
+.rocket-fin {
+  width: 20px;
+  height: 30px;
+  background: var(--magenta);
+  position: absolute;
+  bottom: 0;
+}
+
+.fin-left {
+  left: -15px;
+  border-radius: 100% 0 0 0;
+}
+
+.fin-right {
+  right: -15px;
+  border-radius: 0 100% 0 0;
+}
+
+.rocket-exhaust {
+  width: 20px;
+  height: 40px;
+  background: linear-gradient(to bottom, #ff9900, #ff0000, transparent);
+  position: absolute;
+  bottom: -40px;
+  left: 10px;
+  border-radius: 50%;
+  filter: blur(2px);
+  animation: exhaustAnim 0.1s infinite alternate;
+  display: none;
+}
+
+.css-rocket.flying .rocket-exhaust {
+  display: block;
+}
+
+@keyframes exhaustAnim {
+  from { height: 40px; opacity: 1; }
+  to { height: 60px; opacity: 0.8; }
+}
+
+.css-explosion {
+  width: 100px;
+  height: 100px;
+  background: radial-gradient(circle, #fff, #ffcc00, #ff3300, transparent);
+  border-radius: 50%;
+  position: absolute;
+  z-index: 6;
+  filter: blur(5px);
+  animation: explodeAnim 0.5s ease-out forwards;
+}
+
+@keyframes explodeAnim {
+  0% { transform: scale(0.1); opacity: 1; }
+  50% { transform: scale(1.5); opacity: 0.8; }
+  100% { transform: scale(2); opacity: 0; }
+}
+
+.history-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.history-badge {
+  padding: 5px 10px;
+  border-radius: 15px;
+  font-size: 12px;
+  font-weight: 700;
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+}
+
+.history-badge.high {
+  background: rgba(0, 255, 0, 0.2);
+  color: #00ff00;
+}
+
+.history-badge.low {
+  background: rgba(255, 0, 0, 0.2);
+  color: #ff3333;
+}
