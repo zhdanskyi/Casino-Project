@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', () => {
+﻿document.addEventListener('DOMContentLoaded', () => {
     if (typeof UI !== 'undefined') UI.init();
     if (typeof Notifications !== 'undefined') Notifications.init();
 
@@ -102,8 +102,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const amount = parseFloat(elements.betAmount.value);
         if (isNaN(amount) || amount <= 0) return Notifications.error("Apuesta inválida");
 
-        const user = getUserData();
-        if (!user) return;
+        const user = typeof getUserData !== 'undefined' ? getUserData() : null;
+        if (!user) {
+            const loginModal = document.getElementById('login-modal');
+            if (loginModal) loginModal.showModal();
+            return typeof Notifications !== 'undefined' ? Notifications.error("Debes iniciar sesiÃ³n para jugar.") : null;
+        }
         if (user.balance < amount) return Notifications.error("Saldo insuficiente");
 
         updateBalance(-amount);
@@ -255,3 +259,5 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (elements.lever) elements.lever.addEventListener('click', () => { if (!isSpinning) spin(); });
 });
+
+

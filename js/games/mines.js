@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', () => {
+﻿document.addEventListener('DOMContentLoaded', () => {
     Storage.init();
     Notifications.init();
     UI.init();
@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // Check VIP Access
-    const user = typeof getUserData === 'function' ? getUserData() : Storage.getUser();
+    const user = typeof getUserData !== 'undefined' ? getUserData() : null;
     if (!user || !user.isVIP) {
         alert("Acceso denegado: Necesitas Pase VIP para jugar Neon Mines.");
         window.location.href = '../index.html';
@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return Notifications.error("Apuesta inválida");
         }
         
-        const user = typeof getUserData === 'function' ? getUserData() : Storage.getUser();
+        const user = typeof getUserData !== 'undefined' ? getUserData() : null;
         if (user.balance < amount) {
             return Notifications.error("Saldo insuficiente");
         }
@@ -177,3 +177,5 @@ document.addEventListener('DOMContentLoaded', () => {
     elements.btnPlay.addEventListener('click', startGame);
     elements.btnCashout.addEventListener('click', cashout);
 });
+
+

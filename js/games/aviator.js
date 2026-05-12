@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', () => {
+﻿document.addEventListener('DOMContentLoaded', () => {
     if (typeof UI !== 'undefined') UI.init();
     if (typeof Notifications !== 'undefined') Notifications.init();
 
@@ -36,8 +36,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const amount = parseFloat(elements.betAmount.value);
         if (isNaN(amount) || amount <= 0) return Notifications.error("Apuesta inválida");
         
-        const user = getUserData();
-        if (!user) return;
+        const user = typeof getUserData !== 'undefined' ? getUserData() : null;
+        if (!user) {
+            const loginModal = document.getElementById('login-modal');
+            if (loginModal) loginModal.showModal();
+            return typeof Notifications !== 'undefined' ? Notifications.error("Debes iniciar sesiÃ³n para jugar.") : null;
+        }
         if (user.balance < amount) return Notifications.error("Saldo insuficiente");
 
         updateBalance(-amount);
@@ -296,7 +300,19 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('btnHalfBet')?.addEventListener('click', () => updateBet(parseFloat(elements.betAmount.value)/2));
     document.getElementById('btnDoubleBet')?.addEventListener('click', () => updateBet(parseFloat(elements.betAmount.value)*2));
     document.getElementById('btnMaxBet')?.addEventListener('click', () => {
-        const user = getUserData();
+        const user = typeof getUserData !== 'undefined' ? getUserData() : null;
         if(user) updateBet(user.balance);
+        else if (!user) {
+            const loginModal = document.getElementById('login-modal');
+            if (loginModal) loginModal.showModal();
+            if (typeof Notifications !== 'undefined') Notifications.error("Debes iniciar sesiÃ³n para apostar.");
+        }
+        else if (!user) {
+            const loginModal = document.getElementById('login-modal');
+            if (loginModal) loginModal.showModal();
+            if (typeof Notifications !== 'undefined') Notifications.error("Debes iniciar sesiÃ³n para apostar.");
+        }
     });
 });
+
+
