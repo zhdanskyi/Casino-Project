@@ -1,565 +1,834 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Neon Slots | CasinoHub</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../css/styles.css">
-    <link rel="stylesheet" href="../css/layout.css">
-    <link rel="stylesheet" href="../css/games.css">
-    <link rel="stylesheet" href="../css/animations.css">
-    <link rel="stylesheet" href="../css/modal.css">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../css/styles.css" />
+    <link rel="stylesheet" href="../css/layout.css" />
+    <link rel="stylesheet" href="../css/games.css" />
+    <link rel="stylesheet" href="../css/animations.css" />
+    <link rel="stylesheet" href="../css/modal.css" />
     <style>
+      :root {
+        --slot-scale: 1;
+        --reel-w: 160px;
+        --reel-h: 200px;
+        --symbol-h: 200px;
+      }
+
+      /* MacBook 13" and Smaller Heights Optimization */
+      @media (max-height: 900px) {
         :root {
-            --slot-scale: 1;
-            --reel-w: 160px;
-            --reel-h: 200px;
-            --symbol-h: 200px;
+          --slot-scale: 0.85;
         }
-
-        /* MacBook 13" and Smaller Heights Optimization */
-        @media (max-height: 900px) { :root { --slot-scale: 0.85; } }
-        @media (max-height: 750px) { :root { --slot-scale: 0.75; } }
-        @media (max-width: 1400px) { :root { --slot-scale: 0.8; } }
-        @media (max-width: 1100px) { :root { --slot-scale: 0.65; } }
-
-        .main-content {
-            padding: 0 !important;
-            overflow: hidden;
-            background: #000;
+      }
+      @media (max-height: 750px) {
+        :root {
+          --slot-scale: 0.75;
         }
+      }
+      @media (max-width: 1400px) {
+        :root {
+          --slot-scale: 0.8;
+        }
+      }
+      @media (max-width: 1100px) {
+        :root {
+          --slot-scale: 0.65;
+        }
+      }
 
+      .main-content {
+        padding: 0 !important;
+        overflow: hidden;
+        background: #000;
+      }
+
+      .game-layout {
+        display: grid;
+        grid-template-columns: 320px 1fr;
+        height: calc(100vh - var(--topbar-height));
+        width: 100%;
+        gap: 0 !important;
+        position: relative;
+        z-index: 5;
+      }
+
+      .game-sidebar {
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(30px);
+        border-right: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        z-index: 10;
+      }
+
+      .slots-view {
+        background: radial-gradient(circle at center, #0a0a15 0%, #000 100%);
+        overflow: hidden;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+      }
+
+      .casino-bg {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+      }
+      .bg-light {
+        position: absolute;
+        width: 50vw;
+        height: 50vh;
+        border-radius: 50%;
+        filter: blur(100px);
+        opacity: 0.15;
+        animation: moveLight 15s infinite alternate;
+      }
+      .light-1 {
+        background: var(--cyan);
+        top: -10%;
+        left: 0;
+      }
+      .light-2 {
+        background: var(--magenta);
+        bottom: -10%;
+        right: 0;
+      }
+
+      @keyframes moveLight {
+        from {
+          transform: translate(-10%, -10%);
+        }
+        to {
+          transform: translate(10%, 10%);
+        }
+      }
+
+      .slot-machine-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background: linear-gradient(
+          180deg,
+          #444 0%,
+          #111 15%,
+          #000 50%,
+          #111 85%,
+          #444 100%
+        );
+        padding: calc(50px * var(--slot-scale)) calc(40px * var(--slot-scale));
+        border-radius: calc(60px * var(--slot-scale));
+        border: calc(12px * var(--slot-scale)) solid #222;
+        box-shadow:
+          0 0 0 calc(6px * var(--slot-scale)) #111,
+          0 40px 100px rgba(0, 0, 0, 1),
+          inset 0 0 100px rgba(0, 0, 0, 0.8);
+        position: relative;
+        transform: perspective(2000px) rotateX(1deg) scale(var(--slot-scale));
+        transform-origin: center;
+        z-index: 5;
+        width: fit-content;
+      }
+
+      .jackpots-header {
+        font-size: clamp(30px, 4.5vw, 60px);
+        font-weight: 950;
+        color: #fff;
+        text-shadow:
+          0 0 20px #ff00ff,
+          0 0 40px #ff00ff;
+        margin-bottom: 15px;
+        letter-spacing: 10px;
+        text-transform: uppercase;
+        font-style: italic;
+      }
+
+      .jackpots-panel {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 15px;
+        width: 100%;
+        margin-bottom: 30px;
+      }
+
+      .jackpot-box {
+        background: #000;
+        border: 3px solid #222;
+        border-radius: 15px;
+        padding: 12px 5px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.05);
+      }
+
+      .jackpot-label {
+        font-size: 11px;
+        font-weight: 900;
+        letter-spacing: 2px;
+        opacity: 0.6;
+      }
+      .jackpot-value {
+        font-size: 18px;
+        font-weight: 900;
+        font-family: "monospace";
+        text-shadow: 0 0 10px currentColor;
+      }
+
+      .mini {
+        color: #22c55e;
+        border-bottom: 3px solid #22c55e;
+      }
+      .minor {
+        color: #0ea5e9;
+        border-bottom: 3px solid #0ea5e9;
+      }
+      .mega {
+        color: #d946ef;
+        border-bottom: 3px solid #d946ef;
+      }
+      .ultra {
+        color: #fbbf24;
+        border-bottom: 3px solid #fbbf24;
+      }
+
+      .slot-machine-body {
+        background: #050505;
+        padding: 40px 30px;
+        border-radius: 30px;
+        border: 10px solid #1a1a1a;
+        display: flex;
+        gap: 20px;
+        position: relative;
+        box-shadow: inset 0 0 100px #000;
+        margin-bottom: 20px;
+      }
+
+      .slot-glass {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.1) 0%,
+          transparent 50%,
+          rgba(255, 255, 255, 0.05) 100%
+        );
+        z-index: 10;
+        pointer-events: none;
+        border-radius: 20px;
+        overflow: hidden;
+      }
+
+      .slot-reel {
+        width: var(--reel-w);
+        height: var(--reel-h);
+        background: #fff;
+        border-radius: 12px;
+        overflow: hidden;
+        position: relative;
+        border: 4px solid #111;
+      }
+
+      /* Shadow overlays removed */
+
+      .reel-inner {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        background: #fff;
+      }
+
+      .slot-symbol {
+        height: var(--symbol-h);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: calc(var(--symbol-h) * 0.6);
+        background: #fff; /* White background behind each symbol */
+        position: relative;
+        z-index: 2;
+      }
+
+      .spinning .slot-symbol {
+        /* No blur as requested */
+        opacity: 1;
+      }
+
+      .slot-status {
+        margin-bottom: 15px;
+        font-size: 24px;
+        font-weight: 950;
+        color: #fff;
+        text-transform: uppercase;
+        letter-spacing: 5px;
+        text-shadow: 0 0 15px var(--cyan);
+        height: 30px;
+      }
+
+      .lever-container {
+        position: absolute;
+        right: -60px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 60px;
+        height: 300px;
+        cursor: pointer;
+        z-index: 20;
+      }
+
+      .lever-base {
+        position: absolute;
+        bottom: 30px;
+        left: 0;
+        width: 50px;
+        height: 100px;
+        background: linear-gradient(to right, #000, #333, #000);
+        border-radius: 10px;
+        border: 4px solid #111;
+      }
+
+      .lever-arm {
+        position: absolute;
+        bottom: 90px;
+        left: 16px;
+        width: 18px;
+        height: 200px;
+        background: linear-gradient(90deg, #555, #eee, #555);
+        border-radius: 10px;
+        transform-origin: bottom center;
+        transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+
+      .lever-knob {
+        position: absolute;
+        top: -40px;
+        left: -21px;
+        width: 60px;
+        height: 60px;
+        background: radial-gradient(circle at 30% 30%, #ff0000, #800);
+        border-radius: 50%;
+        border: 3px solid #000;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+      }
+
+      .lever-pulled .lever-arm {
+        transform: rotateX(75deg) translateY(60px);
+      }
+
+      .paytable {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 8px;
+        margin-top: auto;
+      }
+      .paytable-item {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        padding: 10px 15px;
+        display: flex;
+        justify-content: space-between;
+        font-size: 18px;
+        font-weight: 700;
+        color: #ccc;
+      }
+
+      .win-flash {
+        animation: winFlashAnim 0.4s infinite alternate;
+      }
+      @keyframes winFlashAnim {
+        from {
+          filter: brightness(1);
+        }
+        to {
+          filter: brightness(1.8);
+        }
+      }
+
+      @media (max-width: 1200px) {
         .game-layout {
-            display: grid;
-            grid-template-columns: 320px 1fr;
-            height: calc(100vh - var(--topbar-height));
-            width: 100%;
-            gap: 0 !important;
-            position: relative;
-            z-index: 5;
+          grid-template-columns: 1fr;
         }
-
         .game-sidebar {
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(30px);
-            border-right: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            z-index: 10;
+          display: none;
         }
-
-        .slots-view {
-            background: radial-gradient(circle at center, #0a0a15 0%, #000 100%);
-            overflow: hidden;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            height: 100%;
-        }
-
-        .casino-bg {
-            position: absolute;
-            inset: 0;
-            z-index: 0;
-        }
-        .bg-light {
-            position: absolute;
-            width: 50vw;
-            height: 50vh;
-            border-radius: 50%;
-            filter: blur(100px);
-            opacity: 0.15;
-            animation: moveLight 15s infinite alternate;
-        }
-        .light-1 { background: var(--cyan); top: -10%; left: 0; }
-        .light-2 { background: var(--magenta); bottom: -10%; right: 0; }
-
-        @keyframes moveLight {
-            from { transform: translate(-10%, -10%); }
-            to { transform: translate(10%, 10%); }
-        }
-
-        .slot-machine-wrapper {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            background: linear-gradient(180deg, #444 0%, #111 15%, #000 50%, #111 85%, #444 100%);
-            padding: calc(50px * var(--slot-scale)) calc(40px * var(--slot-scale));
-            border-radius: calc(60px * var(--slot-scale));
-            border: calc(12px * var(--slot-scale)) solid #222;
-            box-shadow: 
-                0 0 0 calc(6px * var(--slot-scale)) #111,
-                0 40px 100px rgba(0,0,0,1),
-                inset 0 0 100px rgba(0,0,0,0.8);
-            position: relative;
-            transform: perspective(2000px) rotateX(1deg) scale(var(--slot-scale));
-            transform-origin: center;
-            z-index: 5;
-            width: fit-content;
-        }
-
-        .jackpots-header {
-            font-size: clamp(30px, 4.5vw, 60px);
-            font-weight: 950;
-            color: #fff;
-            text-shadow: 0 0 20px #ff00ff, 0 0 40px #ff00ff;
-            margin-bottom: 15px;
-            letter-spacing: 10px;
-            text-transform: uppercase;
-            font-style: italic;
-        }
-
-        .jackpots-panel {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
-            width: 100%;
-            margin-bottom: 30px;
-        }
-
-        .jackpot-box {
-            background: #000;
-            border: 3px solid #222;
-            border-radius: 15px;
-            padding: 12px 5px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            box-shadow: inset 0 0 10px rgba(255,255,255,0.05);
-        }
-
-        .jackpot-label { font-size: 11px; font-weight: 900; letter-spacing: 2px; opacity: 0.6; }
-        .jackpot-value { font-size: 18px; font-weight: 900; font-family: 'monospace'; text-shadow: 0 0 10px currentColor; }
-
-        .mini { color: #22c55e; border-bottom: 3px solid #22c55e; }
-        .minor { color: #0ea5e9; border-bottom: 3px solid #0ea5e9; }
-        .mega { color: #d946ef; border-bottom: 3px solid #d946ef; }
-        .ultra { color: #fbbf24; border-bottom: 3px solid #fbbf24; }
-
-        .slot-machine-body {
-            background: #050505;
-            padding: 40px 30px;
-            border-radius: 30px;
-            border: 10px solid #1a1a1a;
-            display: flex;
-            gap: 20px;
-            position: relative;
-            box-shadow: inset 0 0 100px #000;
-            margin-bottom: 20px;
-        }
-
-        .slot-glass {
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 50%, rgba(255,255,255,0.05) 100%);
-            z-index: 10;
-            pointer-events: none;
-            border-radius: 20px;
-            overflow: hidden;
-        }
-
-        .slot-reel {
-            width: var(--reel-w);
-            height: var(--reel-h);
-            background: #fff;
-            border-radius: 12px;
-            overflow: hidden;
-            position: relative;
-            border: 4px solid #111;
-        }
-
-        /* Shadow overlays removed */
-
-        .reel-inner {
-            display: flex;
-            flex-direction: column;
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            background: #fff;
-        }
-
-        .slot-symbol {
-            height: var(--symbol-h);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: calc(var(--symbol-h) * 0.6);
-            background: #fff; /* White background behind each symbol */
-            position: relative;
-            z-index: 2;
-        }
-
-        .spinning .slot-symbol {
-            /* No blur as requested */
-            opacity: 1;
-        }
-
-        .slot-status {
-            margin-bottom: 15px;
-            font-size: 24px;
-            font-weight: 950;
-            color: #fff;
-            text-transform: uppercase;
-            letter-spacing: 5px;
-            text-shadow: 0 0 15px var(--cyan);
-            height: 30px;
-        }
-
-        .lever-container {
-            position: absolute;
-            right: -60px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 60px;
-            height: 300px;
-            cursor: pointer;
-            z-index: 20;
-        }
-
-        .lever-base {
-            position: absolute;
-            bottom: 30px; left: 0;
-            width: 50px; height: 100px;
-            background: linear-gradient(to right, #000, #333, #000);
-            border-radius: 10px;
-            border: 4px solid #111;
-        }
-
-        .lever-arm {
-            position: absolute;
-            bottom: 90px; left: 16px;
-            width: 18px; height: 200px;
-            background: linear-gradient(90deg, #555, #eee, #555);
-            border-radius: 10px;
-            transform-origin: bottom center;
-            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-
-        .lever-knob {
-            position: absolute;
-            top: -40px; left: -21px;
-            width: 60px; height: 60px;
-            background: radial-gradient(circle at 30% 30%, #ff0000, #800);
-            border-radius: 50%;
-            border: 3px solid #000;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
-        }
-
-        .lever-pulled .lever-arm { transform: rotateX(75deg) translateY(60px); }
-
-        .paytable {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 8px;
-            margin-top: auto;
-        }
-        .paytable-item {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 10px;
-            padding: 10px 15px;
-            display: flex;
-            justify-content: space-between;
-            font-size: 18px;
-            font-weight: 700;
-            color: #ccc;
-        }
-
-        .win-flash { animation: winFlashAnim 0.4s infinite alternate; }
-        @keyframes winFlashAnim { from { filter: brightness(1); } to { filter: brightness(1.8); } }
-
-        @media (max-width: 1200px) {
-            .game-layout { grid-template-columns: 1fr; }
-            .game-sidebar { display: none; }
-        }
+      }
     </style>
-</head>
+  </head>
 
-<body>
-            <header class="topbar">
-        <div class="topbar-content">
-            <div class="topbar-left">
-                <!-- Logo del Casino -->
-                <a href="../index.html" class="topbar-logo" style="text-decoration: none;">
-                    <i class="fa-solid fa-dice-d20"></i> <span class="logo-text">CasinoHub</span>
+  <body>
+    <header class="topbar">
+      <div class="topbar-content">
+        <div class="topbar-left">
+          <!-- Logo del Casino -->
+          <a
+            href="../index.html"
+            class="topbar-logo"
+            style="text-decoration: none"
+          >
+            <i class="fa-solid fa-dice-d20"></i>
+            <span class="logo-text">CasinoHub</span>
+          </a>
+
+          <!-- Enlaces de NavegaciÃ³n -->
+          <nav class="topbar-nav" id="mobileNav">
+            <a href="../index.html" class="nav-item">
+              <i class="fa-solid fa-house"></i> Inicio
+            </a>
+
+            <!-- MenÃº Desplegable para Juegos -->
+            <div class="mega-menu-wrapper">
+              <a href="../index.html#games-section" class="nav-item active">
+                <i class="fa-solid fa-gamepad"></i> Juegos
+                <i
+                  class="fa-solid fa-chevron-down"
+                  style="font-size: 12px; margin-left: 5px"
+                ></i>
+              </a>
+
+              <div class="mega-menu">
+                <a href="aviator.html" class="mega-menu-item">
+                  <img src="../assets/images/games/aviator.jpg" alt="Aviator" />
+                  Aviator
                 </a>
-
-                <!-- Enlaces de NavegaciÃ³n -->
-                <nav class="topbar-nav" id="mobileNav">
-                    <a href="../index.html" class="nav-item">
-                        <i class="fa-solid fa-house"></i> Inicio
-                    </a>
-
-                    <!-- MenÃº Desplegable para Juegos -->
-                    <div class="mega-menu-wrapper">
-                        <a href="../index.html#games-section" class="nav-item active">
-                            <i class="fa-solid fa-gamepad"></i> Juegos <i class="fa-solid fa-chevron-down"
-                                style="font-size: 12px; margin-left: 5px;"></i>
-                        </a>
-
-                        <div class="mega-menu">
-                            <a href="aviator.html" class="mega-menu-item">
-                                <img src="../assets/images/games/aviator.jpg" alt="Aviator">
-                                Aviator
-                            </a>
-                            <a href="poker.html" class="mega-menu-item">
-                                <img src="../assets/images/games/poker.jpg" alt="Poker">
-                                Cyber Poker
-                            </a>
-                            <a href="mines.html" class="mega-menu-item">
-                                <img src="../assets/images/games/mines.jpg" alt="Mines">
-                                Mines
-                            </a>
-                            <a href="rocket.html" class="mega-menu-item">
-                                <img src="../assets/images/games/rocket.jpg" alt="Rocket">
-                                Rocket Crash
-                            </a>
-                            <a href="slots.html" class="mega-menu-item">
-                                <img src="../assets/images/games/slots.jpg" alt="Slots">
-                                Slots
-                            </a>
-                        </div>
-                    </div>
-
-                    <a href="bonuses.html" class="nav-item">
-                        <i class="fa-solid fa-gift"></i> Promociones
-                    </a>
-                </nav>
+                <a href="poker.html" class="mega-menu-item">
+                  <img src="../assets/images/games/poker.jpg" alt="Poker" />
+                  Cyber Poker
+                </a>
+                <a href="mines.html" class="mega-menu-item">
+                  <img src="../assets/images/games/mines.jpg" alt="Mines" />
+                  Mines
+                </a>
+                <a href="rocket.html" class="mega-menu-item">
+                  <img src="../assets/images/games/rocket.jpg" alt="Rocket" />
+                  Rocket Crash
+                </a>
+                <a href="slots.html" class="mega-menu-item">
+                  <img src="../assets/images/games/slots.jpg" alt="Slots" />
+                  Slots
+                </a>
+              </div>
             </div>
 
-            <div class="topbar-right">
-                <!-- Controles de Usuario (Saldo y Perfil) -->
-                <div class="user-controls">
-                    <div class="balance-display">
-                        <i class="fa-solid fa-wallet"></i>
-                        <span id="userBalance" class="balance-amount">0.00 EUR</span>
-                    </div>
-                    <button id="addFundsBtn" class="add-funds-btn"><i class="fa-solid fa-plus add-funds-icon"
-                            style="display:none;"></i><span class="add-funds-text">+ Añadir Saldo</span></button>
-                    <a href="profile.html" class="user-profile-btn" style="cursor: pointer;">
-                        <div class="user-avatar" id="userAvatarBtn">?</div>
-                        <span id="userNameBtn">Invitado</span>
-                    </a>
-                </div>
-
-                <!-- BotÃ³n de MenÃº MÃ³vil -->
-                <button id="mobileMenuBtn" class="mobile-menu-btn"><i class="fa-solid fa-bars"></i></button>
-            </div>
+            <a href="bonuses.html" class="nav-item">
+              <i class="fa-solid fa-gift"></i> Promociones
+            </a>
+          </nav>
         </div>
+
+        <div class="topbar-right">
+          <!-- Controles de Usuario (Saldo y Perfil) -->
+          <div class="user-controls">
+            <div class="balance-display">
+              <i class="fa-solid fa-wallet"></i>
+              <span id="userBalance" class="balance-amount">0.00 EUR</span>
+            </div>
+            <button id="addFundsBtn" class="add-funds-btn">
+              <i
+                class="fa-solid fa-plus add-funds-icon"
+                style="display: none"
+              ></i
+              ><span class="add-funds-text">+ Añadir Saldo</span>
+            </button>
+            <a
+              href="profile.html"
+              class="user-profile-btn"
+              style="cursor: pointer"
+            >
+              <div class="user-avatar" id="userAvatarBtn">?</div>
+              <span id="userNameBtn">Invitado</span>
+            </a>
+          </div>
+
+          <!-- BotÃ³n de MenÃº MÃ³vil -->
+          <button id="mobileMenuBtn" class="mobile-menu-btn">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+        </div>
+      </div>
     </header>
 
     <main class="main-content">
-        <div class="casino-bg">
-            <div class="bg-light light-1"></div>
-            <div class="bg-light light-2"></div>
-            <div class="bg-light light-3"></div>
-            <div class="neon-column col-1"></div>
-            <div class="neon-column col-2"></div>
-            <div class="neon-column col-3"></div>
-            <div class="casino-particles"></div>
+      <div class="casino-bg">
+        <div class="bg-light light-1"></div>
+        <div class="bg-light light-2"></div>
+        <div class="bg-light light-3"></div>
+        <div class="neon-column col-1"></div>
+        <div class="neon-column col-2"></div>
+        <div class="neon-column col-3"></div>
+        <div class="casino-particles"></div>
+      </div>
+
+      <div class="game-layout">
+        <div class="game-sidebar">
+          <div class="bet-controls">
+            <h3>Panel de Apuesta</h3>
+            <div class="input-group">
+              <label>Importe Apuesta (EUR)</label>
+              <input
+                type="number"
+                id="betAmount"
+                value="5.00"
+                step="1.00"
+                min="1.00"
+              />
+            </div>
+            <div
+              class="bet-info"
+              style="
+                margin-top: 20px;
+                padding: 20px;
+                background: rgba(255, 255, 255, 0.05);
+                border-radius: 15px;
+                border: 1px solid rgba(255, 255, 255, 0.1);
+              "
+            >
+              <p
+                style="
+                  color: #94a3b8;
+                  font-size: 14px;
+                  text-align: center;
+                  line-height: 1.6;
+                "
+              >
+                Tira de la palanca física a la derecha de los reels para empezar
+                a girar.
+              </p>
+            </div>
+          </div>
+
+          <div
+            class="paytable"
+            style="grid-template-columns: 1fr; margin-top: auto"
+          >
+            <div
+              class="paytable-item"
+              style="
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 10px 20px;
+              "
+            >
+              <span>👑 Corona</span> <span>100x</span>
+            </div>
+            <div
+              class="paytable-item"
+              style="
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 10px 20px;
+              "
+            >
+              <span>💎 Diamante</span> <span>50x</span>
+            </div>
+            <div
+              class="paytable-item"
+              style="
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 10px 20px;
+              "
+            >
+              <span>7️⃣ Siete</span> <span>25x</span>
+            </div>
+            <div
+              class="paytable-item"
+              style="
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 10px 20px;
+              "
+            >
+              <span>🍉 Sandía</span> <span>10x</span>
+            </div>
+            <div
+              class="paytable-item"
+              style="
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 10px 20px;
+              "
+            >
+              <span>🍋 Limón</span> <span>5x</span>
+            </div>
+            <div
+              class="paytable-item"
+              style="
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 10px 20px;
+              "
+            >
+              <span>🍒 Cereza</span> <span>2x</span>
+            </div>
+          </div>
         </div>
 
-        <div class="game-layout">
-            <div class="game-sidebar">
-                <div class="bet-controls">
-                    <h3>Panel de Apuesta</h3>
-                    <div class="input-group">
-                        <label>Importe Apuesta (EUR)</label>
-                        <input type="number" id="betAmount" value="5.00" step="1.00" min="1.00">
-                    </div>
-                    <div class="bet-info" style="margin-top: 20px; padding: 20px; background: rgba(255,255,255,0.05); border-radius: 15px; border: 1px solid rgba(255,255,255,0.1);">
-                        <p style="color: #94a3b8; font-size: 14px; text-align: center; line-height: 1.6;">
-                            Tira de la palanca física a la derecha de los reels para empezar a girar.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="paytable" style="grid-template-columns: 1fr; margin-top: auto;">
-                    <div class="paytable-item" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 20px;">
-                        <span>👑 Corona</span> <span>100x</span>
-                    </div>
-                    <div class="paytable-item" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 20px;">
-                        <span>💎 Diamante</span> <span>50x</span>
-                    </div>
-                    <div class="paytable-item" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 20px;">
-                        <span>7️⃣ Siete</span> <span>25x</span>
-                    </div>
-                    <div class="paytable-item" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 20px;">
-                        <span>🍉 Sandía</span> <span>10x</span>
-                    </div>
-                    <div class="paytable-item" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 20px;">
-                        <span>🍋 Limón</span> <span>5x</span>
-                    </div>
-                    <div class="paytable-item" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 20px;">
-                        <span>🍒 Cereza</span> <span>2x</span>
-                    </div>
-                </div>
+        <div class="slots-view">
+          <div class="slot-machine-wrapper">
+            <div class="led-strip">
+              <div class="led-bulb active-cyan"></div>
+              <div class="led-bulb active-magenta"></div>
+              <div class="led-bulb active-cyan"></div>
+              <div class="led-bulb active-magenta"></div>
+              <div class="led-bulb active-cyan"></div>
+              <div class="led-bulb active-magenta"></div>
+              <div class="led-bulb active-cyan"></div>
+              <div class="led-bulb active-magenta"></div>
+              <div class="led-bulb active-cyan"></div>
             </div>
 
-            <div class="slots-view">
-                <div class="slot-machine-wrapper">
-                    <div class="led-strip">
-                        <div class="led-bulb active-cyan"></div>
-                        <div class="led-bulb active-magenta"></div>
-                        <div class="led-bulb active-cyan"></div>
-                        <div class="led-bulb active-magenta"></div>
-                        <div class="led-bulb active-cyan"></div>
-                        <div class="led-bulb active-magenta"></div>
-                        <div class="led-bulb active-cyan"></div>
-                        <div class="led-bulb active-magenta"></div>
-                        <div class="led-bulb active-cyan"></div>
-                    </div>
-
-                    <div class="jackpots-header">JACKPOT CITY</div>
-                    <div class="jackpots-panel">
-                        <div class="jackpot-box mini" id="plateMini">
-                            <span class="jackpot-label">MINI</span>
-                            <span class="jackpot-value" id="jackpotMini">10.00 €</span>
-                        </div>
-                        <div class="jackpot-box minor" id="plateMinor">
-                            <span class="jackpot-label">MINOR</span>
-                            <span class="jackpot-value" id="jackpotMinor">50.00 €</span>
-                        </div>
-                        <div class="jackpot-box mega" id="plateMega">
-                            <span class="jackpot-label">MEGA</span>
-                            <span class="jackpot-value" id="jackpotMega">200.00 €</span>
-                        </div>
-                        <div class="jackpot-box ultra" id="plateUltra">
-                            <span class="jackpot-label">ULTRA</span>
-                            <span class="jackpot-value" id="jackpotUltra">1000.00 €</span>
-                        </div>
-                    </div>
-
-                    <div id="slotStatus" class="slot-status">TIRA DE LA PALANCA PARA GANAR</div>
-
-                    <div class="slot-machine-body">
-                        <div class="slot-glass"></div>
-
-                        <div class="slot-reel" id="reel1">
-                            <div class="reel-inner" id="inner1"></div>
-                        </div>
-                        <div class="slot-reel" id="reel2">
-                            <div class="reel-inner" id="inner2"></div>
-                        </div>
-                        <div class="slot-reel" id="reel3">
-                            <div class="reel-inner" id="inner3"></div>
-                        </div>
-
-                        <div class="lever-container" id="lever">
-                            <div class="lever-base"></div>
-                            <div class="lever-arm" id="leverArm">
-                                <div class="lever-knob"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div class="jackpots-header">JACKPOT CITY</div>
+            <div class="jackpots-panel">
+              <div class="jackpot-box mini" id="plateMini">
+                <span class="jackpot-label">MINI</span>
+                <span class="jackpot-value" id="jackpotMini">10.00 €</span>
+              </div>
+              <div class="jackpot-box minor" id="plateMinor">
+                <span class="jackpot-label">MINOR</span>
+                <span class="jackpot-value" id="jackpotMinor">50.00 €</span>
+              </div>
+              <div class="jackpot-box mega" id="plateMega">
+                <span class="jackpot-label">MEGA</span>
+                <span class="jackpot-value" id="jackpotMega">200.00 €</span>
+              </div>
+              <div class="jackpot-box ultra" id="plateUltra">
+                <span class="jackpot-label">ULTRA</span>
+                <span class="jackpot-value" id="jackpotUltra">1000.00 €</span>
+              </div>
             </div>
+
+            <div id="slotStatus" class="slot-status">
+              TIRA DE LA PALANCA PARA GANAR
+            </div>
+
+            <div class="slot-machine-body">
+              <div class="slot-glass"></div>
+
+              <div class="slot-reel" id="reel1">
+                <div class="reel-inner" id="inner1"></div>
+              </div>
+              <div class="slot-reel" id="reel2">
+                <div class="reel-inner" id="inner2"></div>
+              </div>
+              <div class="slot-reel" id="reel3">
+                <div class="reel-inner" id="inner3"></div>
+              </div>
+
+              <div class="lever-container" id="lever">
+                <div class="lever-base"></div>
+                <div class="lever-arm" id="leverArm">
+                  <div class="lever-knob"></div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
     </main>
-
-    
 
     <!-- Modales Globales -->
     <dialog id="wallet-modal" class="modal">
-        <div class="modal-content glass-effect">
-            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
-                <img id="wallet-avatar" src="" alt="Avatar"
-                    style="width: 60px; height: 60px; border-radius: 50%; border: 2px solid #0ea5e9;">
-                <div style="text-align: left;">
-                    <h3 id="wallet-name" class="neon-text" style="margin-bottom: 5px;">Usuario</h3>
-                    <p style="color: #94a3b8; font-size: 0.9em;">Miembro VIP</p>
-                <button id="btn-logout" class="btn-secondary" style="border: 1px solid #ef4444; color: #ef4444; padding: 4px 8px; font-size: 0.8em; cursor: pointer; border-radius: 4px; margin-top: 5px;">
-                    <i class="fa-solid fa-right-from-bracket"></i> Salir
-                </button>
-                </div>
-                <button id="btn-close-wallet" class="btn-icon" style="margin-left: auto; align-self: flex-start;">
-                    <i class="fa-solid fa-xmark" style="font-size: 24px;"></i>
-                </button>
-            </div>
-
-            <!-- Tabs de navegacion -->
-            <div class="wallet-tabs">
-                <button class="wallet-tab active" data-tab="deposit">Depósito</button>
-                <button class="wallet-tab" data-tab="withdraw">Retiro</button>
-                <button class="wallet-tab" data-tab="history">Historial</button>
-            </div>
-
-            <div class="wallet-body">
-                <!-- Contenedor general de saldo, se mantiene comun en deposito y retiro -->
-                <div class="wallet-balance-box">
-                    <p>Saldo Actual</p>
-                    <div class="balance-display">
-                        <span id="wallet-balance">0.00</span> <span class="currency">€</span>
-                    </div>
-                </div>
-
-                <!-- Tab Deposito / Retiro (comparten estructura) -->
-                <div id="tab-transaction" class="tab-content active">
-                    <div class="transaction-form">
-                        <label id="transaction-label">Cantidad a ingresar</label>
-                        <div class="input-group">
-                            <input type="number" id="transaction-input" placeholder="0.00" min="0" step="10">
-                            <span class="currency-addon">€</span>
-                        </div>
-
-                        <div class="quick-amounts">
-                            <button class="btn-quick" data-val="10">+10</button>
-                            <button class="btn-quick" data-val="50">+50</button>
-                            <button class="btn-quick" data-val="100">+100</button>
-                            <button class="btn-quick" id="btn-max-amount">MAX</button>
-                        </div>
-
-                        <button id="btn-confirm-transaction" class="btn-primary btn-full"
-                            style="border: none; cursor: pointer;">Confirmar Transacción</button>
-                        <p id="transaction-msg" class="transaction-msg"></p>
-                    </div>
-                </div>
-
-                <!-- Tab Historial -->
-                <div id="tab-history" class="tab-content" style="display: none;">
-                    <ul id="wallet-transactions" class="history-list">
-                        <!-- transacciones inyectadas por js -->
-                    </ul>
-                </div>
-            </div>
+      <div class="modal-content glass-effect">
+        <div
+          style="
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+          "
+        >
+          <img
+            id="wallet-avatar"
+            src=""
+            alt="Avatar"
+            style="
+              width: 60px;
+              height: 60px;
+              border-radius: 50%;
+              border: 2px solid #0ea5e9;
+            "
+          />
+          <div style="text-align: left">
+            <h3 id="wallet-name" class="neon-text" style="margin-bottom: 5px">
+              Usuario
+            </h3>
+            <p style="color: #94a3b8; font-size: 0.9em">Miembro VIP</p>
+            <button
+              id="btn-logout"
+              class="btn-secondary"
+              style="
+                border: 1px solid #ef4444;
+                color: #ef4444;
+                padding: 4px 8px;
+                font-size: 0.8em;
+                cursor: pointer;
+                border-radius: 4px;
+                margin-top: 5px;
+              "
+            >
+              <i class="fa-solid fa-right-from-bracket"></i> Salir
+            </button>
+          </div>
+          <button
+            id="btn-close-wallet"
+            class="btn-icon"
+            style="margin-left: auto; align-self: flex-start"
+          >
+            <i class="fa-solid fa-xmark" style="font-size: 24px"></i>
+          </button>
         </div>
+
+        <!-- Tabs de navegacion -->
+        <div class="wallet-tabs">
+          <button class="wallet-tab active" data-tab="deposit">Depósito</button>
+          <button class="wallet-tab" data-tab="withdraw">Retiro</button>
+          <button class="wallet-tab" data-tab="history">Historial</button>
+        </div>
+
+        <div class="wallet-body">
+          <!-- Contenedor general de saldo, se mantiene comun en deposito y retiro -->
+          <div class="wallet-balance-box">
+            <p>Saldo Actual</p>
+            <div class="balance-display">
+              <span id="wallet-balance">0.00</span>
+              <span class="currency">€</span>
+            </div>
+          </div>
+
+          <!-- Tab Deposito / Retiro (comparten estructura) -->
+          <div id="tab-transaction" class="tab-content active">
+            <div class="transaction-form">
+              <label id="transaction-label">Cantidad a ingresar</label>
+              <div class="input-group">
+                <input
+                  type="number"
+                  id="transaction-input"
+                  placeholder="0.00"
+                  min="0"
+                  step="10"
+                />
+                <span class="currency-addon">€</span>
+              </div>
+
+              <div class="quick-amounts">
+                <button class="btn-quick" data-val="10">+10</button>
+                <button class="btn-quick" data-val="50">+50</button>
+                <button class="btn-quick" data-val="100">+100</button>
+                <button class="btn-quick" id="btn-max-amount">MAX</button>
+              </div>
+
+              <button
+                id="btn-confirm-transaction"
+                class="btn-primary btn-full"
+                style="border: none; cursor: pointer"
+              >
+                Confirmar Transacción
+              </button>
+              <p id="transaction-msg" class="transaction-msg"></p>
+            </div>
+          </div>
+
+          <!-- Tab Historial -->
+          <div id="tab-history" class="tab-content" style="display: none">
+            <ul id="wallet-transactions" class="history-list">
+              <!-- transacciones inyectadas por js -->
+            </ul>
+          </div>
+        </div>
+      </div>
     </dialog>
     <dialog id="login-modal" class="modal">
-        <div class="modal-content glass-effect" style="margin: auto;">
-            <div style="margin-bottom: 30px;">
-                <i class="fa-solid fa-user-circle"
-                    style="font-size: 40px; color: var(--magenta); margin-bottom: 15px;"></i>
-                <h2 class="neon-text">Bienvenido a CasinoHub</h2>
-                <p style="color: #94a3b8; margin-top: 10px;">Selecciona tu perfil o crea uno nuevo</p>
-            </div>
-
-            <div id="profiles-list"
-                style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 30px;">
-                <!-- Los perfiles se inyectan aquí mediante JS -->
-            </div>
-
-            <div
-                style="background: rgba(0,0,0,0.2); padding: 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);">
-                <h4 style="margin-bottom: 15px; color: #94a3b8;">Crear nuevo perfil</h4>
-                <div class="input-group" style="margin-bottom: 15px;">
-                    <input type="text" id="new-profile-name" placeholder="Tu nombre..."
-                        style="flex: 1; background: transparent; border: none; color: #fff; padding: 12px; outline: none;">
-                </div>
-                <button id="btn-create-profile" class="btn-primary"
-                    style="width: 100%; border: none; cursor: pointer;">Registrarse y Jugar</button>
-            </div>
-            <button id="btn-close-login" class="btn-secondary"
-                style="margin-top: 15px; width: 100%; cursor: pointer;">Cerrar</button>
+      <div class="modal-content glass-effect" style="margin: auto">
+        <div style="margin-bottom: 30px">
+          <i
+            class="fa-solid fa-user-circle"
+            style="font-size: 40px; color: var(--magenta); margin-bottom: 15px"
+          ></i>
+          <h2 class="neon-text">Bienvenido a CasinoHub</h2>
+          <p style="color: #94a3b8; margin-top: 10px">
+            Selecciona tu perfil o crea uno nuevo
+          </p>
         </div>
+
+        <div
+          id="profiles-list"
+          style="
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+          "
+        >
+          <!-- Los perfiles se inyectan aquí mediante JS -->
+        </div>
+
+        <div
+          style="
+            background: rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+          "
+        >
+          <h4 style="margin-bottom: 15px; color: #94a3b8">
+            Crear nuevo perfil
+          </h4>
+          <div class="input-group" style="margin-bottom: 15px">
+            <input
+              type="text"
+              id="new-profile-name"
+              placeholder="Tu nombre..."
+              style="
+                flex: 1;
+                background: transparent;
+                border: none;
+                color: #fff;
+                padding: 12px;
+                outline: none;
+              "
+            />
+          </div>
+          <button
+            id="btn-create-profile"
+            class="btn-primary"
+            style="width: 100%; border: none; cursor: pointer"
+          >
+            Registrarse y Jugar
+          </button>
+        </div>
+        <button
+          id="btn-close-login"
+          class="btn-secondary"
+          style="margin-top: 15px; width: 100%; cursor: pointer"
+        >
+          Cerrar
+        </button>
+      </div>
     </dialog>
 
     <div id="toast-container"></div>
@@ -571,10 +840,5 @@
     <script src="../js/ui.js"></script>
     <script src="../js/app.js"></script>
     <script src="../js/games/slots.js"></script>
-</body>
-
+  </body>
 </html>
-
-
-
-
